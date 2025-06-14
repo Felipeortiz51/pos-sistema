@@ -1,287 +1,320 @@
 /* ==============================================
-   SISTEMA POS - DISEÑO MINIMALISTA CONSOLIDADO
+   TIENDACONTROL - DISEÑO MODERNO ACTUALIZADO
    ============================================== */
 
-/* --- VARIABLES CSS (simuladas con comentarios) --- */
-/*
-Paleta de colores minimalista:
-- Blanco puro: #FFFFFF
-- Gris muy claro: #FAFBFC
-- Gris claro: #F5F6FA
-- Gris medio: #8B93A5
-- Gris texto: #2C3E50
-- Acento azul: #3B82F6
-- Acento azul hover: #2563EB
-- Verde éxito: #10B981
-- Rojo alerta: #EF4444
-- Amarillo advertencia: #F59E0B
-*/
-
-/* --- RESET Y BASE --- */
+/* --- VARIABLES Y COLORES --- */
 .root {
-    -fx-font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
-    -fx-background-color: #FAFBFC;
+    -fx-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    -fx-background-color: #f8f9fa;
     -fx-font-smoothing-type: lcd;
 }
 
-/* --- SIDEBAR MINIMALISTA --- */
-.sidebar {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #F1F3F5;
+/* --- SIDEBAR MODERNO --- */
+.sidebar-modern {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
     -fx-border-width: 0 1 0 0;
-    -fx-padding: 32 0;
-    -fx-spacing: 8;
-    -fx-alignment: top-center;
-    -fx-effect: null; /* Sin sombras para máximo minimalismo */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 2, 0);
 }
 
-.sidebar-title {
+/* Logo Section */
+.logo-section {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo-icon {
+    -fx-fill: #0d6efd;
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+}
+
+.sidebar-logo-text {
     -fx-font-size: 20px;
     -fx-font-weight: 600;
-    -fx-text-fill: #2C3E50;
-    -fx-padding: 0 24 40 24;
+    -fx-text-fill: #212529;
     -fx-letter-spacing: -0.5px;
 }
 
-.nav-button {
+/* Navigation Menu */
+.nav-menu {
+    -fx-spacing: 4;
+}
+
+.nav-button-modern {
     -fx-background-color: transparent;
-    -fx-text-fill: #8B93A5;
-    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 15px;
     -fx-font-weight: 500;
-    -fx-pref-width: 200px;
-    -fx-pref-height: 44px;
+    -fx-pref-width: infinity;
+    -fx-pref-height: 48px;
     -fx-alignment: center-left;
-    -fx-padding: 0 24;
-    -fx-background-radius: 0;
-    -fx-graphic-text-gap: 16;
+    -fx-padding: 0 20 0 20;
+    -fx-background-radius: 8px;
     -fx-cursor: hand;
+    -fx-border-width: 0;
 }
 
-.nav-button:hover {
-    -fx-background-color: #F8FAFC;
-    -fx-text-fill: #2C3E50;
+.nav-button-modern:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #495057;
 }
 
-.nav-button-active {
-    -fx-background-color: #F0F9FF;
-    -fx-text-fill: #3B82F6;
-    -fx-border-color: #3B82F6;
-    -fx-border-width: 0 3 0 0;
+.nav-button-modern.nav-button-active {
+    -fx-background-color: #e7f3ff;
+    -fx-text-fill: #0d6efd;
+}
+
+.nav-button-modern.nav-button-active .nav-icon {
+    -fx-fill: #0d6efd;
+}
+
+.nav-icon {
+    -fx-fill: #6c757d;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+.nav-button-modern:hover .nav-icon {
+    -fx-fill: #495057;
 }
 
 /* --- CONTENIDO PRINCIPAL --- */
-.main-content {
-    -fx-padding: 40 48 48 48;
-    -fx-background-color: #FAFBFC;
+.main-content-modern {
+    -fx-background-color: #f8f9fa;
 }
 
-.header-title {
-    -fx-font-size: 32px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #1F2937;
-    -fx-letter-spacing: -1px;
-    -fx-padding: 0 0 32 0;
+.content-header {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1 0;
 }
 
-.dashboard-grid {
-    -fx-hgap: 24;
-    -fx-vgap: 24;
+.header-title-modern {
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #212529;
 }
 
-/* --- TARJETAS MINIMALISTAS --- */
+.header-subtitle-modern {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+    -fx-font-weight: 400;
+}
+
+.header-date {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+}
+
+.content-container {
+    -fx-background-color: #f8f9fa;
+}
+
+/* --- TARJETAS ACTUALIZADAS --- */
 .info-card {
-    -fx-background-color: #FFFFFF;
-    -fx-padding: 32;
+    -fx-background-color: #ffffff;
+    -fx-padding: 24;
     -fx-background-radius: 12px;
-    -fx-border-color: #F1F3F5;
+    -fx-border-color: #e9ecef;
     -fx-border-width: 1;
     -fx-border-radius: 12px;
-    -fx-spacing: 12;
-    -fx-alignment: top-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
 }
 
 .info-card:hover {
-    -fx-border-color: #E5E7EB;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
 }
 
 .card-title {
-    -fx-font-size: 11px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #8B93A5;
-    -fx-letter-spacing: 0.5px;
-    -fx-text-transform: uppercase;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6c757d;
+    -fx-letter-spacing: 0.3px;
 }
 
 .card-data {
-    -fx-font-size: 28px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #1F2937;
-    -fx-letter-spacing: -0.5px;
+    -fx-font-size: 32px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #212529;
 }
 
 .card-subtitle {
-    -fx-font-size: 13px;
-    -fx-font-weight: 500;
-    -fx-text-fill: #10B981;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #28a745;
 }
 
 .card-subtitle-alert {
-    -fx-font-size: 13px;
-    -fx-font-weight: 500;
-    -fx-text-fill: #EF4444;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #dc3545;
 }
 
-/* --- BOTONES MINIMALISTAS --- */
-.quick-access-button {
-    -fx-background-color: #3B82F6;
-    -fx-text-fill: #FFFFFF;
+/* --- BOTONES ACTUALIZADOS --- */
+.button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #495057;
     -fx-font-size: 14px;
-    -fx-font-weight: 600;
+    -fx-font-weight: 500;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 8px;
     -fx-background-radius: 8px;
-    -fx-padding: 16 24;
-    -fx-graphic-text-gap: 12;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #adb5bd;
+}
+
+.button-primary {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #0d6efd;
+}
+
+.button-primary:hover {
+    -fx-background-color: #0b5ed7;
+    -fx-border-color: #0a58ca;
+}
+
+.button-success {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+}
+
+.button-success:hover {
+    -fx-background-color: #218838;
+    -fx-border-color: #1e7e34;
+}
+
+.button-danger {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #dc3545;
+}
+
+.button-danger:hover {
+    -fx-background-color: #c82333;
+    -fx-border-color: #bd2130;
+}
+
+.quick-access-button {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 24;
     -fx-cursor: hand;
     -fx-border-width: 0;
-    -fx-effect: null;
 }
 
 .quick-access-button:hover {
-    -fx-background-color: #2563EB;
+    -fx-background-color: #0b5ed7;
 }
 
-.quick-access-button:pressed {
-    -fx-background-color: #1D4ED8;
-}
-
-/* --- TABLA MINIMALISTA --- */
+/* --- TABLAS ACTUALIZADAS --- */
 .table-view {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #F1F3F5;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
     -fx-border-width: 1;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #F8FAFC;
-    -fx-border-color: #F1F3F5;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
     -fx-border-width: 0 0 1 0;
 }
 
 .table-view .column-header {
     -fx-background-color: transparent;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-text-fill: #6B7280;
-    -fx-padding: 16 20;
+    -fx-text-fill: #495057;
+    -fx-padding: 14 20;
 }
 
 .table-view .table-cell {
-    -fx-padding: 16 20;
+    -fx-padding: 14 20;
     -fx-font-size: 14px;
-    -fx-text-fill: #374151;
-    -fx-border-color: #F1F3F5;
+    -fx-text-fill: #212529;
+    -fx-border-color: #f8f9fa;
     -fx-border-width: 0 0 1 0;
 }
 
 .table-row-cell:selected {
-    -fx-background-color: #F0F9FF;
-    -fx-text-fill: #1F2937;
+    -fx-background-color: #e7f3ff;
 }
 
-/* --- FORMULARIOS MINIMALISTAS --- */
+/* --- FORMULARIOS ACTUALIZADOS --- */
 .text-field, .text-area {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #E5E7EB;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
     -fx-border-width: 1;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 12 16;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10 14;
     -fx-font-size: 14px;
-    -fx-text-fill: #374151;
-    -fx-prompt-text-fill: #9CA3AF;
+    -fx-text-fill: #495057;
+    -fx-prompt-text-fill: #6c757d;
 }
 
 .text-field:focused, .text-area:focused {
-    -fx-border-color: #3B82F6;
+    -fx-border-color: #0d6efd;
     -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.15), 8, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(13,110,253,0.25), 6, 0, 0, 0);
 }
 
-.spinner {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #E5E7EB;
+.search-field {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
     -fx-border-width: 1;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
+    -fx-padding: 14 18;
+    -fx-font-size: 15px;
+}
+
+.search-field:focused {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #0d6efd;
+}
+
+/* --- SPINNERS --- */
+.spinner {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
 }
 
 .spinner .text-field {
     -fx-border-width: 0;
-    -fx-background-radius: 8 0 0 8;
+    -fx-background-radius: 6 0 0 6;
 }
 
-/* --- BOTONES ESTÁNDAR --- */
-.button {
-    -fx-background-color: #FFFFFF;
-    -fx-text-fill: #374151;
-    -fx-font-size: 14px;
-    -fx-font-weight: 500;
-    -fx-border-color: #E5E7EB;
-    -fx-border-width: 1;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 12 20;
-    -fx-cursor: hand;
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 0 0 0 1;
 }
 
-.button:hover {
-    -fx-background-color: #F9FAFB;
-    -fx-border-color: #D1D5DB;
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #e9ecef;
 }
 
-.button:pressed {
-    -fx-background-color: #F3F4F6;
-}
-
-/* Botón primario */
-.button-primary {
-    -fx-background-color: #3B82F6;
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: #3B82F6;
-}
-
-.button-primary:hover {
-    -fx-background-color: #2563EB;
-    -fx-border-color: #2563EB;
-}
-
-/* Botón de éxito */
-.button-success {
-    -fx-background-color: #10B981;
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: #10B981;
-}
-
-.button-success:hover {
-    -fx-background-color: #059669;
-    -fx-border-color: #059669;
-}
-
-/* Botón de peligro */
-.button-danger {
-    -fx-background-color: #EF4444;
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: #EF4444;
-}
-
-.button-danger:hover {
-    -fx-background-color: #DC2626;
-    -fx-border-color: #DC2626;
-}
-
-/* --- GRÁFICOS MINIMALISTAS --- */
+/* --- GRÁFICOS --- */
 .chart {
     -fx-background-color: transparent;
     -fx-padding: 0;
@@ -292,228 +325,171 @@ Paleta de colores minimalista:
 }
 
 .default-color0.chart-bar {
-    -fx-bar-fill: #3B82F6;
+    -fx-bar-fill: #0d6efd;
 }
 
 .chart-bar:hover {
-    -fx-bar-fill: #2563EB;
+    -fx-bar-fill: #0b5ed7;
 }
 
 .axis {
-    -fx-tick-label-font-size: 11px;
-    -fx-tick-label-fill: #6B7280;
+    -fx-tick-label-font-size: 12px;
+    -fx-tick-label-fill: #6c757d;
 }
 
-.axis-label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #6B7280;
-}
-
-/* --- SEPARADORES --- */
-.separator {
-    -fx-background-color: #F1F3F5;
-    -fx-pref-height: 1;
-}
-
-/* --- SCROLLBARS MINIMALISTAS --- */
-.scroll-bar {
-    -fx-background-color: transparent;
-    -fx-pref-width: 8;
-}
-
-.scroll-bar .track {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #E5E7EB;
-    -fx-background-radius: 4;
-}
-
-.scroll-bar .thumb:hover {
-    -fx-background-color: #D1D5DB;
-}
-
-/* --- LAYOUT ESPECÍFICO PARA VENTAS --- */
-.sales-layout {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #F1F3F5;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-}
-
-.sales-sidebar {
-    -fx-background-color: #F8FAFC;
-    -fx-padding: 32;
-    -fx-spacing: 20;
-    -fx-border-color: #F1F3F5;
-    -fx-border-width: 0 1 0 0;
-}
-
-.total-display {
-    -fx-font-size: 36px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #10B981;
-    -fx-letter-spacing: -1px;
-}
-
-/* --- LAYOUT ESPECÍFICO PARA PRODUCTOS --- */
-.product-form {
-    -fx-background-color: #FFFFFF;
-    -fx-padding: 32;
-    -fx-spacing: 24;
-    -fx-border-color: #F1F3F5;
-    -fx-border-width: 1 0 0 0;
-}
-
-.search-field {
-    -fx-background-color: #F8FAFC;
-    -fx-border-color: #E5E7EB;
-    -fx-border-width: 1;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-padding: 16 20;
-    -fx-font-size: 16px;
-}
-
-.search-field:focused {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #3B82F6;
-    -fx-border-width: 2;
-}
-
-/* ===============================================
-   ESTILOS ADICIONALES PARA REFINAMIENTO
-   =============================================== */
-
-/* --- MEJORAS PARA DIALOGS Y ALERTAS --- */
+/* --- DIÁLOGOS Y ALERTAS --- */
 .dialog-pane {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #E5E7EB;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
     -fx-border-width: 1;
-    -fx-border-radius: 16px;
-    -fx-background-radius: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 8);
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 8);
 }
 
 .dialog-pane .header-panel {
-    -fx-background-color: #F8FAFC;
+    -fx-background-color: #f8f9fa;
     -fx-padding: 20 24 16 24;
 }
 
 .dialog-pane .content {
     -fx-padding: 16 24 24 24;
     -fx-font-size: 14px;
-    -fx-text-fill: #374151;
+    -fx-text-fill: #495057;
 }
 
-.dialog-pane .button-bar {
-    -fx-padding: 16 24 20 24;
-    -fx-spacing: 12;
-}
-
-/* --- MEJORAS PARA DATE PICKER --- */
+/* --- DATE PICKER --- */
 .date-picker {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #E5E7EB;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
     -fx-border-width: 1;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
 }
 
 .date-picker .text-field {
     -fx-border-width: 0;
     -fx-background-color: transparent;
-    -fx-background-radius: 8 0 0 8;
 }
 
 .date-picker .arrow-button {
-    -fx-background-color: #F9FAFB;
-    -fx-border-color: #E5E7EB;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
     -fx-border-width: 0 0 0 1;
-    -fx-background-radius: 0 8 8 0;
 }
 
 .date-picker .arrow-button:hover {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #e9ecef;
 }
 
-.date-picker .arrow-button .arrow {
-    -fx-background-color: #6B7280;
+/* --- SEPARADORES --- */
+.separator {
+    -fx-background-color: #e9ecef;
+    -fx-pref-height: 1;
 }
 
-/* --- MEJORAS PARA SPINNER --- */
-.spinner .increment-arrow-button,
-.spinner .decrement-arrow-button {
-    -fx-background-color: #F9FAFB;
-    -fx-border-color: #E5E7EB;
-    -fx-border-width: 0 0 0 1;
+/* --- SCROLLBARS --- */
+.scroll-bar {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10;
 }
 
-.spinner .increment-arrow-button:hover,
-.spinner .decrement-arrow-button:hover {
-    -fx-background-color: #F3F4F6;
+.scroll-bar .track {
+    -fx-background-color: #f8f9fa;
 }
 
-.spinner .increment-arrow,
-.spinner .decrement-arrow {
-    -fx-background-color: #6B7280;
+.scroll-bar .thumb {
+    -fx-background-color: #dee2e6;
+    -fx-background-radius: 5;
 }
 
-/* --- ESTADOS DE HOVER PARA FILAS DE TABLA --- */
-.table-row-cell:hover {
-    -fx-background-color: #F8FAFC;
+.scroll-bar .thumb:hover {
+    -fx-background-color: #adb5bd;
 }
 
-.table-row-cell:selected:hover {
-    -fx-background-color: #E0F2FE;
+/* --- TOOLTIPS --- */
+.tooltip {
+    -fx-background-color: #212529;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
 }
 
-/* --- MEJORAS PARA PROGRESS INDICATORS --- */
-.progress-indicator {
-    -fx-progress-color: #3B82F6;
-    -fx-background-color: #F1F3F5;
-}
-
-.progress-bar {
-    -fx-accent: #3B82F6;
-    -fx-background-color: #F1F3F5;
-    -fx-background-radius: 4;
-}
-
-.progress-bar .bar {
-    -fx-background-color: #3B82F6;
-    -fx-background-radius: 4;
-}
-
-/* --- MEJORAS PARA MENU CONTEXT --- */
+/* --- CONTEXT MENU --- */
 .context-menu {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #E5E7EB;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
     -fx-border-width: 1;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
-    -fx-padding: 8;
+    -fx-padding: 6;
 }
 
 .menu-item {
     -fx-background-color: transparent;
-    -fx-text-fill: #374151;
-    -fx-padding: 8 12;
+    -fx-text-fill: #495057;
+    -fx-padding: 8 16;
     -fx-background-radius: 4;
 }
 
 .menu-item:hover {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #f8f9fa;
 }
 
-/* --- MEJORAS ESPECÍFICAS PARA CARDS CON GRÁFICOS --- */
+/* --- ESTADOS DISABLED --- */
+.button:disabled,
+.text-field:disabled,
+.spinner:disabled {
+    -fx-opacity: 0.6;
+    -fx-cursor: default;
+}
+
+/* --- DASHBOARD ESPECÍFICO --- */
+.dashboard-grid {
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+}
+
+/* --- SALES LAYOUT --- */
+.sales-layout {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+.sales-sidebar {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 28;
+    -fx-spacing: 20;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 1 0 0;
+}
+
+.total-display {
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #28a745;
+}
+
+/* --- PRODUCT FORM --- */
+.product-form {
+    -fx-background-color: #ffffff;
+    -fx-padding: 28;
+    -fx-spacing: 24;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* --- CHART CARD --- */
 .chart-card {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #ffffff;
     -fx-padding: 24;
     -fx-background-radius: 12px;
-    -fx-border-color: #F1F3F5;
+    -fx-border-color: #e9ecef;
     -fx-border-width: 1;
     -fx-border-radius: 12px;
 }
@@ -521,92 +497,68 @@ Paleta de colores minimalista:
 .chart-title {
     -fx-font-size: 16px;
     -fx-font-weight: 600;
-    -fx-text-fill: #1F2937;
+    -fx-text-fill: #212529;
     -fx-padding: 0 0 16 0;
 }
 
-/* --- MEJORAS PARA TOOLTIPS --- */
-.tooltip {
-    -fx-background-color: #1F2937;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 12px;
-    -fx-padding: 8 12;
-    -fx-background-radius: 6px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 2);
-}
-
-/* --- ESTADOS DISABLED --- */
-.button:disabled,
-.text-field:disabled,
-.date-picker:disabled,
-.spinner:disabled {
-    -fx-opacity: 0.6;
-    -fx-cursor: default;
-}
-
-/* --- MEJORAS PARA LABELS DE DATOS GRANDES --- */
+/* --- MÉTRICAS --- */
 .metric-label {
     -fx-font-size: 48px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #1F2937;
-    -fx-letter-spacing: -2px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #212529;
 }
 
 .metric-subtitle {
     -fx-font-size: 14px;
-    -fx-font-weight: 500;
-    -fx-text-fill: #6B7280;
-    -fx-letter-spacing: 0.25px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #6c757d;
 }
 
-/* --- CLASES UTILITARIAS --- */
-.text-success {
-    -fx-text-fill: #10B981;
-}
-
-.text-danger {
-    -fx-text-fill: #EF4444;
-}
-
-.text-warning {
-    -fx-text-fill: #F59E0B;
-}
-
-.text-muted {
-    -fx-text-fill: #6B7280;
-}
+/* --- UTILIDADES --- */
+.text-success { -fx-text-fill: #28a745; }
+.text-danger { -fx-text-fill: #dc3545; }
+.text-warning { -fx-text-fill: #ffc107; }
+.text-muted { -fx-text-fill: #6c757d; }
 
 .bg-success {
-    -fx-background-color: #ECFDF5;
-    -fx-border-color: #10B981;
+    -fx-background-color: #d4edda;
+    -fx-border-color: #c3e6cb;
 }
 
 .bg-danger {
-    -fx-background-color: #FEF2F2;
-    -fx-border-color: #EF4444;
+    -fx-background-color: #f8d7da;
+    -fx-border-color: #f5c6cb;
 }
 
 .bg-warning {
-    -fx-background-color: #FFFBEB;
-    -fx-border-color: #F59E0B;
+    -fx-background-color: #fff3cd;
+    -fx-border-color: #ffeeba;
 }
 
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 1200px) {
-    .main-content {
-        -fx-padding: 24 32 32 32;
-    }
+/* --- BADGES --- */
+.badge-danger {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-padding: 4 8;
+    -fx-background-radius: 12px;
+}
 
-    .header-title {
-        -fx-font-size: 28px;
-    }
+.badge-success {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-padding: 4 8;
+    -fx-background-radius: 12px;
+}
 
-    .dashboard-grid {
-        -fx-hgap: 16;
-        -fx-vgap: 16;
-    }
-
-    .info-card {
-        -fx-padding: 24;
-    }
+.badge-primary {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-padding: 4 8;
+    -fx-background-radius: 12px;
 }

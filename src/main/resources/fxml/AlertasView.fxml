@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<ScrollPane fitToWidth="true" styleClass="content-container" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuempresa.pos.controller.AlertasController">
+    <content>
+        <VBox spacing="24.0">
+            <padding>
+                <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+            </padding>
+            <children>
+                <!-- Header Section -->
+                <HBox alignment="CENTER_LEFT" spacing="16.0">
+                    <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Centro de Alertas" style="-fx-font-size: 24px; -fx-font-weight: 600; -fx-text-fill: #212529;"/>
+                                <Label fx:id="lblResumenAlertas" text="3 alertas activas" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
+                            </children>
+                        </VBox>
+                        <Button text="Marcar todas como leídas" styleClass="button"/>
+                    </children>
+                </HBox>
+
+                <!-- Alertas de Stock Bajo -->
+                <VBox spacing="16.0" styleClass="info-card">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <SVGPath content="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
+                                         style="-fx-fill: #dc3545; -fx-scale-x: 1.5; -fx-scale-y: 1.5;"/>
+                                <Label text="Stock Bajo" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #dc3545;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblCountStockBajo" text="2 productos" styleClass="badge-danger"/>
+                            </children>
+                        </HBox>
+                        <Separator/>
+                        <VBox fx:id="vboxAlertasStock" spacing="12.0">
+                            <!-- Las alertas de stock se agregarán dinámicamente aquí -->
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- Alertas de Ventas -->
+                <VBox spacing="16.0" styleClass="info-card">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <SVGPath content="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                         style="-fx-fill: #28a745; -fx-scale-x: 1.5; -fx-scale-y: 1.5;"/>
+                                <Label text="Ventas del Día" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #28a745;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblCountVentas" text="Meta alcanzada" styleClass="badge-success"/>
+                            </children>
+                        </HBox>
+                        <Separator/>
+                        <VBox fx:id="vboxAlertasVentas" spacing="12.0">
+                            <!-- Las alertas de ventas se agregarán dinámicamente aquí -->
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- Alertas del Sistema -->
+                <VBox spacing="16.0" styleClass="info-card">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <SVGPath content="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                         style="-fx-fill: #0d6efd; -fx-scale-x: 1.5; -fx-scale-y: 1.5;"/>
+                                <Label text="Sistema" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #0d6efd;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblCountSistema" text="Todo en orden" styleClass="badge-primary"/>
+                            </children>
+                        </HBox>
+                        <Separator/>
+                        <VBox fx:id="vboxAlertasSistema" spacing="12.0">
+                            <!-- Las alertas del sistema se agregarán dinámicamente aquí -->
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

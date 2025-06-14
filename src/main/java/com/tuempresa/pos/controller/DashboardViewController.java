@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,19 +18,21 @@ import java.util.Locale;
 
 public class DashboardViewController {
 
-    @FXML private BorderPane mainContentArea;
+    @FXML private VBox mainContentArea;
     @FXML private Button btnDashboard;
     @FXML private Button btnVentas;
     @FXML private Button btnProductos;
     @FXML private Button btnReportes;
+    @FXML private Button btnAlertas;
     @FXML private Label lblHeaderTitle;
+    @FXML private Label lblHeaderSubtitle;
     @FXML private Label lblFechaHora;
 
     private List<Button> navButtons;
 
     @FXML
     public void initialize() {
-        navButtons = Arrays.asList(btnDashboard, btnVentas, btnProductos, btnReportes);
+        navButtons = Arrays.asList(btnDashboard, btnProductos, btnVentas, btnReportes, btnAlertas);
 
         // Actualizar fecha y hora
         actualizarFechaHora();
@@ -69,7 +72,8 @@ public class DashboardViewController {
                 contentController.setNavegacionVentasAction(event -> handleVentasClick());
             }
 
-            mainContentArea.setCenter(view);
+            mainContentArea.getChildren().clear();
+            mainContentArea.getChildren().add(view);
 
         } catch (IOException e) {
             System.err.println("Error de IO al cargar FXML: " + fxmlFile);
@@ -80,9 +84,11 @@ public class DashboardViewController {
     private void setActiveButton(Button activeButton) {
         for (Button button : navButtons) {
             if (button != null) {
-                button.getStyleClass().remove("nav-button-active");
+                button.getStyleClass().removeAll("nav-button-active");
                 if (button.equals(activeButton)) {
-                    button.getStyleClass().add("nav-button-active");
+                    if (!button.getStyleClass().contains("nav-button-active")) {
+                        button.getStyleClass().add("nav-button-active");
+                    }
                 }
             }
         }
@@ -92,34 +98,43 @@ public class DashboardViewController {
         if (lblHeaderTitle != null) {
             lblHeaderTitle.setText(titulo);
         }
-        // Puedes agregar lógica para el subtítulo si tienes ese label
+        if (lblHeaderSubtitle != null) {
+            lblHeaderSubtitle.setText(subtitulo);
+        }
     }
 
     @FXML
     void handleDashboardClick() {
         cambiarVista("DashboardContentView.fxml");
         setActiveButton(btnDashboard);
-        actualizarTituloHeader("Panel de Control", "Resumen general del negocio");
+        actualizarTituloHeader("Dashboard", "Resumen general del negocio");
     }
 
     @FXML
     void handleVentasClick() {
         cambiarVista("MainView.fxml");
         setActiveButton(btnVentas);
-        actualizarTituloHeader("Registrar Venta", "Punto de venta interactivo");
+        actualizarTituloHeader("Ventas", "Registrar nueva venta");
     }
 
     @FXML
     void handleProductosClick() {
         cambiarVista("ProductManagementView.fxml");
         setActiveButton(btnProductos);
-        actualizarTituloHeader("Gestión de Productos", "Administrar inventario y catálogo");
+        actualizarTituloHeader("Productos", "Gestión de inventario");
     }
 
     @FXML
     void handleReportesClick() {
         cambiarVista("ReportsView.fxml");
         setActiveButton(btnReportes);
-        actualizarTituloHeader("Reportes de Ventas", "Análisis y estadísticas del negocio");
+        actualizarTituloHeader("Reportes", "Análisis y estadísticas de ventas");
+    }
+
+    @FXML
+    void handleAlertasClick() {
+        cambiarVista("AlertasView.fxml");
+        setActiveButton(btnAlertas);
+        actualizarTituloHeader("Alertas", "Notificaciones y avisos del sistema");
     }
 }
