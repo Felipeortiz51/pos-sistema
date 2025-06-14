@@ -1,0 +1,106 @@
+/* dashboard-styles.css */
+
+/* --- FUENTE GLOBAL --- */
+.root {
+    -fx-font-family: 'System';
+    -fx-background-color: #F7FAFC; /* Color de fondo general */
+}
+
+/* --- BARRA LATERAL DE NAVEGACIÓN --- */
+.sidebar {
+    -fx-background-color: #2D3748; /* Azul oscuro/gris */
+    -fx-padding: 10;
+    -fx-spacing: 15;
+    -fx-alignment: top-center;
+}
+
+.sidebar-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 10 0 20 0; /* Espacio debajo del título */
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A0AEC0; /* Gris claro */
+    -fx-font-size: 14px;
+    -fx-pref-width: 180px;
+    -fx-alignment: center-left;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8px;
+    -fx-graphic-text-gap: 15; /* Espacio entre ícono y texto */
+}
+
+.nav-button:hover {
+    -fx-background-color: #4A5568; /* Gris más oscuro al pasar el ratón */
+    -fx-text-fill: white;
+}
+
+.nav-button-active {
+    -fx-background-color: #4A5568;
+    -fx-text-fill: white;
+}
+
+
+/* --- CONTENIDO PRINCIPAL --- */
+.main-content {
+    -fx-padding: 25;
+}
+
+.header-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2D3748;
+}
+
+.dashboard-grid {
+    -fx-hgap: 20; /* Espacio horizontal entre tarjetas */
+    -fx-vgap: 20; /* Espacio vertical entre tarjetas */
+}
+
+/* --- TARJETAS DE INFORMACIÓN --- */
+.info-card {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5); /* Sombra sutil */
+    -fx-alignment: top-left;
+    -fx-spacing: 8;
+}
+
+.card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #718096; /* Gris */
+}
+
+.card-data {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2D3748;
+}
+
+.card-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #48BB78; /* Verde para positivo */
+}
+
+.card-subtitle-alert {
+    -fx-font-size: 12px;
+    -fx-text-fill: #E53E3E; /* Rojo para alertas */
+}
+
+/* --- BOTONES DE ACCESO RÁPIDO --- */
+.quick-access-button {
+    -fx-background-color: #4299E1; /* Azul */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 20;
+    -fx-graphic-text-gap: 10;
+}
+.quick-access-button:hover {
+    -fx-background-color: #2B6CB0; /* Azul oscuro */
+}
