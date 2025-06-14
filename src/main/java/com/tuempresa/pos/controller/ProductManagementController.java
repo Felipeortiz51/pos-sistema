@@ -2,6 +2,8 @@ package com.tuempresa.pos.controller;
 
 import com.tuempresa.pos.dao.ProductoDAO;
 import com.tuempresa.pos.model.Producto;
+import com.tuempresa.pos.service.SessionManager;
+import com.tuempresa.pos.util.NotificationUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -9,7 +11,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import com.tuempresa.pos.util.NotificationUtil;
 
 import java.util.Optional;
 
@@ -42,41 +43,58 @@ public class ProductManagementController {
 
         configurarColumnas();
         configurarSpinners();
-
-        // Añadir un listener para cuando se selecciona un producto en la tabla
-
-
         cargarProductos();
+        configurarBusqueda();
 
+        tablaProductos.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> mostrarDetallesProducto(newValue)
+        );
+
+        // Aplicar permisos según el rol del usuario logueado
+        aplicarPermisos();
+    }
+
+    private void aplicarPermisos() {
+        boolean esAdmin = SessionManager.getInstance().isAdmin();
+
+        // Deshabilitar los campos del formulario si el usuario no es admin
+        txtNombre.setDisable(!esAdmin);
+        txtCodigoBarras.setDisable(!esAdmin);
+        spinnerPrecio.setDisable(!esAdmin);
+        spinnerStock.setDisable(!esAdmin);
+        txtDescripcion.setDisable(!esAdmin);
+
+        // Ocultar los botones de acción si no es admin
+        btnGuardar.setVisible(esAdmin);
+        btnGuardar.setManaged(esAdmin); // Con setManaged(false) el botón no ocupa espacio
+        btnNuevo.setVisible(esAdmin);
+        btnNuevo.setManaged(esAdmin);
+        btnEliminar.setVisible(esAdmin);
+        btnEliminar.setManaged(esAdmin);
+
+        if (!esAdmin) {
+            limpiarFormulario(); // Limpiamos por si había algo seleccionado
+            txtBusqueda.setPromptText("Búsqueda (solo vista)");
+        }
+    }
+
+    private void configurarBusqueda() {
         FilteredList<Producto> listaFiltrada = new FilteredList<>(listaProductosMaster, p -> true);
         txtBusqueda.textProperty().addListener((observable, oldValue, newValue) -> {
             listaFiltrada.setPredicate(producto -> {
-                // Si el campo de búsqueda está vacío, muestra todos los productos.
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
-
                 String textoBusqueda = newValue.toLowerCase();
-
-                // Compara el nombre y el código de barras con el texto de búsqueda.
                 if (producto.getNombre().toLowerCase().contains(textoBusqueda)) {
-                    return true; // Coincide por nombre.
-                } else if (producto.getCodigoBarras().toLowerCase().contains(textoBusqueda)) {
-                    return true; // Coincide por código de barras.
-                }
-
-                return false; // No hay coincidencia.
+                    return true;
+                } else return producto.getCodigoBarras().toLowerCase().contains(textoBusqueda);
             });
         });
         SortedList<Producto> listaOrdenada = new SortedList<>(listaFiltrada);
         listaOrdenada.comparatorProperty().bind(tablaProductos.comparatorProperty());
         tablaProductos.setItems(listaOrdenada);
-        tablaProductos.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mostrarDetallesProducto(newValue)
-        );
-
     }
-
 
     private void configurarColumnas() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -87,74 +105,60 @@ public class ProductManagementController {
     }
 
     private void configurarSpinners() {
-        // Configuración para el Spinner de Precio (Double)
         SpinnerValueFactory<Double> precioFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 1000000.0, 0.0, 50.0);
         spinnerPrecio.setValueFactory(precioFactory);
-
-        // Configuración para el Spinner de Stock (Integer)
         SpinnerValueFactory<Integer> stockFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, 0);
         spinnerStock.setValueFactory(stockFactory);
     }
 
     private void cargarProductos() {
-        // Ahora este método solo carga los datos en la lista "maestra"
         listaProductosMaster.setAll(productoDAO.getAllProductos());
     }
 
     private void mostrarDetallesProducto(Producto producto) {
         if (producto != null) {
-            // Rellenar el formulario con los datos del producto seleccionado
             txtNombre.setText(producto.getNombre());
             txtCodigoBarras.setText(producto.getCodigoBarras());
             spinnerPrecio.getValueFactory().setValue(producto.getPrecio());
             spinnerStock.getValueFactory().setValue(producto.getStock());
             txtDescripcion.setText(producto.getDescripcion());
         } else {
-            // Limpiar el formulario si no hay nada seleccionado
             limpiarFormulario();
         }
     }
 
     @FXML
     private void handleGuardarProducto() {
-        // Obtener el producto seleccionado de la tabla
         Producto productoSeleccionado = tablaProductos.getSelectionModel().getSelectedItem();
-
         if (txtNombre.getText().isEmpty() || txtCodigoBarras.getText().isEmpty()) {
             NotificationUtil.mostrarError("Error", "Los campos Nombre y Código de Barras son obligatorios.");
             return;
         }
-
         boolean exito;
-
-        if (productoSeleccionado == null) { // Modo: Crear nuevo producto
+        if (productoSeleccionado == null) {
             Producto nuevoProducto = new Producto();
             nuevoProducto.setNombre(txtNombre.getText());
             nuevoProducto.setCodigoBarras(txtCodigoBarras.getText());
             nuevoProducto.setPrecio(spinnerPrecio.getValue());
             nuevoProducto.setStock(spinnerStock.getValue());
             nuevoProducto.setDescripcion(txtDescripcion.getText());
-
             exito = productoDAO.crearProducto(nuevoProducto);
-        } else { // Modo: Actualizar producto existente
+        } else {
             productoSeleccionado.setNombre(txtNombre.getText());
             productoSeleccionado.setCodigoBarras(txtCodigoBarras.getText());
             productoSeleccionado.setPrecio(spinnerPrecio.getValue());
             productoSeleccionado.setStock(spinnerStock.getValue());
             productoSeleccionado.setDescripcion(txtDescripcion.getText());
-
             exito = productoDAO.actualizarProducto(productoSeleccionado);
         }
-
         if (exito) {
-            cargarProductos(); // Recargar la tabla para mostrar los cambios
+            cargarProductos();
             limpiarFormulario();
             tablaProductos.getSelectionModel().clearSelection();
         } else {
             NotificationUtil.mostrarError("Error", "No se pudo guardar el producto en la base de datos.");
         }
     }
-
 
     @FXML
     private void handleNuevoProducto() {
@@ -166,17 +170,14 @@ public class ProductManagementController {
     @FXML
     private void handleEliminarProducto() {
         Producto productoSeleccionado = tablaProductos.getSelectionModel().getSelectedItem();
-
         if (productoSeleccionado == null) {
             NotificationUtil.mostrarError("Error", "Por favor, seleccione un producto de la tabla para eliminar.");
             return;
         }
-
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar Eliminación");
         confirmacion.setHeaderText("¿Está seguro de que desea eliminar el producto: " + productoSeleccionado.getNombre() + "?");
         confirmacion.setContentText("Esta acción no se puede deshacer.");
-
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             boolean exito = productoDAO.eliminarProducto(productoSeleccionado.getId());
@@ -188,7 +189,6 @@ public class ProductManagementController {
             }
         }
     }
-
     @FXML
     private void buscarProductoPorCodigo() {
         String codigo = txtCodigoBarras.getText().trim();
@@ -221,6 +221,4 @@ public class ProductManagementController {
         spinnerStock.getValueFactory().setValue(0);
         txtDescripcion.clear();
     }
-
-
 }

@@ -41,3 +41,19 @@ CREATE TABLE IF NOT EXISTS detalle_ventas (
     FOREIGN KEY (id_venta) REFERENCES ventas(id) ON DELETE CASCADE,
     FOREIGN KEY (id_producto) REFERENCES productos(id)
 );
+
+-- =====================================================
+-- TABLA: usuarios
+-- Almacena usuarios, contraseñas hasheadas y roles.
+-- Roles: 'admin', 'cajero'
+-- =====================================================
+CREATE TABLE IF NOT EXISTS usuarios (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre_usuario  TEXT NOT NULL UNIQUE,
+    hash_contrasena TEXT NOT NULL,
+    rol             TEXT NOT NULL CHECK(rol IN ('admin', 'cajero'))
+);
+
+-- Insertar un usuario administrador por defecto para el primer inicio
+-- Contraseña: admin
+INSERT OR IGNORE INTO usuarios (nombre_usuario, hash_contrasena, rol) VALUES ('admin', '$2a$10$lc61.NxFiCiO0yEySWhHzuEPSUHOyERFOV8jMzFyDnWD9Bi8V7Qa6', 'admin');

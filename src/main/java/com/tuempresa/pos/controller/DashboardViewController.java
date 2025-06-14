@@ -1,13 +1,12 @@
 package com.tuempresa.pos.controller;
 
+import com.tuempresa.pos.service.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -33,19 +32,27 @@ public class DashboardViewController {
     @FXML
     public void initialize() {
         navButtons = Arrays.asList(btnDashboard, btnProductos, btnVentas, btnReportes, btnAlertas);
-
-        // Actualizar fecha y hora
         actualizarFechaHora();
-
-        // Cargar vista inicial
+        aplicarPermisos();
         handleDashboardClick();
+    }
+
+    private void aplicarPermisos() {
+        boolean isAdmin = SessionManager.getInstance().isAdmin();
+
+        // Un cajero no puede gestionar productos, ver reportes o alertas complejas.
+        btnProductos.setManaged(isAdmin);
+        btnProductos.setVisible(isAdmin);
+        btnReportes.setManaged(isAdmin);
+        btnReportes.setVisible(isAdmin);
+        btnAlertas.setManaged(isAdmin);
+        btnAlertas.setVisible(isAdmin);
     }
 
     private void actualizarFechaHora() {
         if (lblFechaHora != null) {
             LocalDateTime ahora = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy",
-                    new Locale("es", "ES"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", new Locale("es", "ES"));
             lblFechaHora.setText(ahora.format(formatter));
         }
     }
@@ -61,12 +68,10 @@ public class DashboardViewController {
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent view = loader.load();
 
-            // Configurar propiedades de redimensionamiento
             if (view instanceof javafx.scene.layout.Region) {
                 ((javafx.scene.layout.Region) view).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             }
 
-            // Configuración especial para DashboardContent
             if (fxmlFile.equals("DashboardContentView.fxml")) {
                 DashboardContentController contentController = loader.getController();
                 contentController.setNavegacionVentasAction(event -> handleVentasClick());
