@@ -13,67 +13,103 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuempresa.pos.controller.MainViewController">
-    <top>
-        <VBox alignment="CENTER" prefHeight="80.0" style="-fx-background-color: #333; -fx-padding: 10;">
-            <children>
-                <Label text="Sistema de Punto de Venta (POS)" textFill="white">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                </Label>
-            </children>
-        </VBox>
-    </top>
+<BorderPane styleClass="sales-layout" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuempresa.pos.controller.MainViewController">
+
+    <!-- Panel lateral para agregar productos -->
     <left>
-        <VBox prefWidth="350.0" spacing="10.0" style="-fx-background-color: #f4f4f4; -fx-padding: 15;">
+        <VBox styleClass="sales-sidebar" prefWidth="380.0" spacing="24.0">
             <children>
-                <Label text="Añadir Producto">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <!-- Título de la sección -->
+                <Label text="Agregar Producto" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #1F2937;" />
+
+                <!-- Campo de código de barras -->
+                <VBox spacing="8.0">
                     <children>
-                        <TextField fx:id="txtCodigoBarras" onAction="#buscarProductoPorCodigo" promptText="Escanear Código de Barras..." HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#buscarProductoPorCodigo" text="Buscar" />
+                        <Label text="Código de Barras" style="-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #6B7280;" />
+                        <HBox spacing="12.0">
+                            <children>
+                                <TextField fx:id="txtCodigoBarras" onAction="#buscarProductoPorCodigo"
+                                           promptText="Escanear o escribir código..."
+                                           styleClass="text-field" HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#buscarProductoPorCodigo"
+                                        text="Buscar" styleClass="button-primary" />
+                            </children>
+                        </HBox>
                     </children>
-                </HBox>
-                <TextField fx:id="txtNombreProducto" promptText="o buscar por Nombre..." />
-                <Spinner fx:id="spinnerCantidad" editable="true" initialValue="1" max="100" min="1" />
-                <Button maxWidth="1.7976931348623157E308" onAction="#agregarAlCarrito" text="Agregar al Carrito" />
-                <Separator prefWidth="200.0" />
-                <Label text="Total Venta:">
-                    <font>
-                        <Font name="System Bold" size="16.0" />
-                    </font>
-                </Label>
-                <Label fx:id="lblTotal" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2a9d8f;" text="\$0.00" />
+                </VBox>
+
+                <!-- Campo de nombre del producto -->
+                <VBox spacing="8.0">
+                    <children>
+                        <Label text="Nombre del Producto" style="-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #6B7280;" />
+                        <TextField fx:id="txtNombreProducto" promptText="Buscar por nombre..."
+                                   styleClass="text-field" />
+                    </children>
+                </VBox>
+
+                <!-- Selector de cantidad -->
+                <VBox spacing="8.0">
+                    <children>
+                        <Label text="Cantidad" style="-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #6B7280;" />
+                        <Spinner fx:id="spinnerCantidad" editable="true" initialValue="1"
+                                 max="100" min="1" styleClass="spinner" prefWidth="120.0" />
+                    </children>
+                </VBox>
+
+                <!-- Botón agregar al carrito -->
+                <Button maxWidth="1.7976931348623157E308" onAction="#agregarAlCarrito"
+                        text="Agregar al Carrito" styleClass="button-primary"
+                        style="-fx-pref-height: 48px; -fx-font-size: 15px;" />
+
+                <Separator />
+
+                <!-- Sección del total -->
+                <VBox spacing="16.0" style="-fx-alignment: center;">
+                    <children>
+                        <Label text="Total de la Venta" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #6B7280;" />
+                        <Label fx:id="lblTotal" styleClass="total-display" text="\$0.00" />
+                    </children>
+                </VBox>
+
+                <!-- Espaciador flexible -->
                 <VBox VBox.vgrow="ALWAYS" />
-                <Button maxWidth="1.7976931348623157E308" onAction="#finalizarVenta" prefHeight="40.0" style="-fx-background-color: #2a9d8f; -fx-text-fill: white;" text="Finalizar Venta">
-                    <font>
-                        <Font name="System Bold" size="16.0" />
-                    </font>
-                </Button>
-                <Button maxWidth="1.7976931348623157E308" onAction="#cancelarVenta" style="-fx-background-color: #e76f51;" text="Cancelar Venta" textFill="white" />
+
+                <!-- Botones de acción -->
+                <VBox spacing="12.0">
+                    <children>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#finalizarVenta"
+                                text="Finalizar Venta" styleClass="button-success"
+                                style="-fx-pref-height: 52px; -fx-font-size: 16px; -fx-font-weight: 600;" />
+                        <Button maxWidth="1.7976931348623157E308" onAction="#cancelarVenta"
+                                text="Cancelar Venta" styleClass="button-danger" />
+                    </children>
+                </VBox>
             </children>
         </VBox>
     </left>
+
+    <!-- Tabla principal del carrito -->
     <center>
-        <TableView fx:id="tablaVenta" BorderPane.alignment="CENTER">
-            <columns>
-                <TableColumn fx:id="colProducto" prefWidth="250.0" text="Producto" />
-                <TableColumn fx:id="colCantidad" prefWidth="100.0" text="Cantidad" />
-                <TableColumn fx:id="colPrecioUnitario" prefWidth="150.0" text="Precio Unitario" />
-                <TableColumn fx:id="colSubtotal" prefWidth="150.0" text="Subtotal" />
-                <TableColumn fx:id="colAcciones" prefWidth="120.0" text="Acciones" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-            <BorderPane.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </BorderPane.margin>
-        </TableView>
+        <VBox style="-fx-padding: 32;">
+            <children>
+                <!-- Título de la tabla -->
+                <Label text="Carrito de Compras"
+                       style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #1F2937; -fx-padding: 0 0 24 0;" />
+
+                <!-- Tabla de productos -->
+                <TableView fx:id="tablaVenta" VBox.vgrow="ALWAYS" style="-fx-min-height: 400px;">
+                    <columns>
+                        <TableColumn fx:id="colProducto" prefWidth="280.0" text="Producto" />
+                        <TableColumn fx:id="colCantidad" prefWidth="100.0" text="Cantidad" />
+                        <TableColumn fx:id="colPrecioUnitario" prefWidth="140.0" text="Precio Unit." />
+                        <TableColumn fx:id="colSubtotal" prefWidth="140.0" text="Subtotal" />
+                        <TableColumn fx:id="colAcciones" prefWidth="120.0" text="Acciones" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
     </center>
 </BorderPane>

@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +24,8 @@ public class ReportsViewController {
     @FXML private TableColumn<Venta, Integer> colNumItems;
     @FXML private Label lblVentasTotales;
     @FXML private Label lblNumeroTransacciones;
+    @FXML private Label lblNumeroTransaccionesSummary; // Nuevo label
+    @FXML private Label lblPromedioVenta; // Nuevo label
 
     private VentaDAO ventaDAO;
 
@@ -40,11 +41,14 @@ public class ReportsViewController {
     }
 
     private void configurarColumnas() {
-        colIdVenta.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colIdVenta.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
+
+        colTotal.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleDoubleProperty(cellData.getValue().getTotal()).asObject());
 
         // Formatear la fecha para que se vea bien
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         colFecha.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getFechaVenta().format(formatter))
         );
@@ -53,6 +57,19 @@ public class ReportsViewController {
         colNumItems.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getDetalles().size()).asObject()
         );
+
+        // Formatear columnas de números
+        colTotal.setCellFactory(col -> new TableCell<Venta, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%,.2f", item));
+                }
+            }
+        });
     }
 
     @FXML
@@ -75,8 +92,20 @@ public class ReportsViewController {
 
         // Calcular y mostrar los totales
         double totalVentas = ventas.stream().mapToDouble(Venta::getTotal).sum();
+        int numeroTransacciones = ventas.size();
+        double promedioVenta = numeroTransacciones > 0 ? totalVentas / numeroTransacciones : 0.0;
+
+        // Actualizar todos los labels
         lblVentasTotales.setText(String.format("$%,.2f", totalVentas));
-        lblNumeroTransacciones.setText(String.valueOf(ventas.size()));
+        lblNumeroTransacciones.setText(String.format("%d transacciones", numeroTransacciones));
+
+        // Actualizar los nuevos labels si existen
+        if (lblNumeroTransaccionesSummary != null) {
+            lblNumeroTransaccionesSummary.setText(String.valueOf(numeroTransacciones));
+        }
+        if (lblPromedioVenta != null) {
+            lblPromedioVenta.setText(String.format("$%,.2f", promedioVenta));
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
@@ -84,6 +113,12 @@ public class ReportsViewController {
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
+
+        // Aplicar estilo minimalista al diálogo
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/css/dashboard-styles.css").toExternalForm()
+        );
+
         alert.showAndWait();
     }
 }

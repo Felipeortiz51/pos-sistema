@@ -18,17 +18,20 @@
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="160.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="180.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="320.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
+        <!-- Tarjeta: Productos Activos -->
         <VBox styleClass="info-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <children>
                 <Label styleClass="card-title" text="PRODUCTOS ACTIVOS" />
                 <Label fx:id="lblProductosActivos" styleClass="card-data" text="0" />
-                <Label styleClass="card-subtitle" text="Total en inventario" />
+                <Label styleClass="card-subtitle" text="Disponibles en inventario" />
             </children>
         </VBox>
+
+        <!-- Tarjeta: Ventas Hoy -->
         <VBox styleClass="info-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <children>
                 <Label styleClass="card-title" text="VENTAS HOY" />
@@ -36,6 +39,8 @@
                 <Label fx:id="lblVentasSubtitulo" styleClass="card-subtitle" text="+0% que ayer" />
             </children>
         </VBox>
+
+        <!-- Tarjeta: Alertas de Stock -->
         <VBox styleClass="info-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
             <children>
                 <Label styleClass="card-title" text="ALERTAS DE STOCK" />
@@ -43,22 +48,32 @@
                 <Label fx:id="lblAlertasSubtitulo" styleClass="card-subtitle-alert" text="Requieren atención" />
             </children>
         </VBox>
-        <VBox spacing="15.0" styleClass="info-card" GridPane.rowIndex="1">
+
+        <!-- Panel: Accesos Rápidos -->
+        <VBox spacing="20.0" styleClass="info-card" GridPane.rowIndex="1">
             <children>
                 <Label styleClass="card-title" text="ACCESOS RÁPIDOS" />
                 <Separator prefWidth="200.0" />
-                <Button fx:id="btnAccesoRapidoVentas" mnemonicParsing="false" styleClass="quick-access-button" text="Registrar Nueva Venta" />
+                <Button fx:id="btnAccesoRapidoVentas" mnemonicParsing="false"
+                        styleClass="quick-access-button" text="Registrar Nueva Venta" />
+                <Button mnemonicParsing="false" styleClass="button" text="Ver Reportes del Día" />
+                <Button mnemonicParsing="false" styleClass="button" text="Gestionar Productos" />
             </children>
         </VBox>
+
+        <!-- Panel: Gráfico de Ventas -->
         <VBox styleClass="info-card" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
             <children>
-                <Label styleClass="card-title" text="VENTAS ÚLTIMOS 7 DÍAS" />
-                <BarChart fx:id="barChartVentas" animated="false" legendVisible="false" VBox.vgrow="ALWAYS">
+                <Label styleClass="card-title" text="TENDENCIA DE VENTAS" />
+                <Label style="-fx-font-size: 13px; -fx-text-fill: #6B7280; -fx-padding: 0 0 12 0;"
+                       text="Últimos 7 días" />
+                <BarChart fx:id="barChartVentas" animated="true" legendVisible="false"
+                          VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
                     <xAxis>
-                        <CategoryAxis side="BOTTOM" />
+                        <CategoryAxis side="BOTTOM" tickLabelFill="#6B7280" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis side="LEFT" />
+                        <NumberAxis side="LEFT" tickLabelFill="#6B7280" />
                     </yAxis>
                 </BarChart>
             </children>

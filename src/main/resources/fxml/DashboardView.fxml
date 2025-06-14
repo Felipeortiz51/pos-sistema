@@ -3,63 +3,84 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="768.0" prefWidth="1366.0" stylesheets="@../css/dashboard-styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuempresa.pos.controller.DashboardViewController">
+
+    <!-- Sidebar Navigation -->
     <left>
-        <VBox fx:id="sidebar" prefWidth="220.0" styleClass="sidebar">
+        <VBox fx:id="sidebar" prefWidth="240.0" styleClass="sidebar">
             <children>
-                <Label styleClass="sidebar-title" text="POS System" />
-                <Button fx:id="btnDashboard" mnemonicParsing="false" onAction="#handleDashboardClick" styleClass="nav-button" text="Dashboard">
-                    <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                            <image><Image url="@/icons/dashboard.png" /></image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button fx:id="btnVentas" mnemonicParsing="false" onAction="#handleVentasClick" styleClass="nav-button" text="Registrar Venta">
-                    <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                            <image><Image url="@/icons/cart.png" /></image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button fx:id="btnProductos" mnemonicParsing="false" onAction="#handleProductosClick" styleClass="nav-button" text="Productos">
-                    <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                            <image><Image url="@/icons/box.png" /></image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button fx:id="btnReportes" mnemonicParsing="false" onAction="#handleReportesClick" styleClass="nav-button" text="Reportes">
-                    <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                            <image><Image url="@/icons/report.png" /></image>
-                        </ImageView>
-                    </graphic>
-                </Button>
+                <!-- Logo/Title Section -->
+                <VBox spacing="8.0" style="-fx-alignment: center; -fx-padding: 0 0 32 0;">
+                    <children>
+                        <Label styleClass="sidebar-title" text="POS System" />
+                        <Label text="Punto de Venta" style="-fx-font-size: 12px; -fx-text-fill: #8B93A5; -fx-font-weight: 400;" />
+                    </children>
+                </VBox>
+
+                <!-- Navigation Menu -->
+                <VBox spacing="4.0">
+                    <children>
+                        <Button fx:id="btnDashboard" mnemonicParsing="false" onAction="#handleDashboardClick"
+                                styleClass="nav-button" text="Dashboard" />
+
+                        <Button fx:id="btnVentas" mnemonicParsing="false" onAction="#handleVentasClick"
+                                styleClass="nav-button" text="Registrar Venta" />
+
+                        <Button fx:id="btnProductos" mnemonicParsing="false" onAction="#handleProductosClick"
+                                styleClass="nav-button" text="Productos" />
+
+                        <Button fx:id="btnReportes" mnemonicParsing="false" onAction="#handleReportesClick"
+                                styleClass="nav-button" text="Reportes" />
+                    </children>
+                </VBox>
+
+                <!-- Footer Section -->
+                <Region VBox.vgrow="ALWAYS" />
+                <VBox style="-fx-padding: 24; -fx-alignment: center;">
+                    <children>
+                        <Label text="v1.0.0" style="-fx-font-size: 11px; -fx-text-fill: #8B93A5;" />
+                    </children>
+                </VBox>
             </children>
         </VBox>
     </left>
+
+    <!-- Main Content Area -->
     <center>
         <VBox styleClass="main-content" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="60.0">
+                <!-- Header with Title and Actions -->
+                <HBox alignment="CENTER_LEFT" prefHeight="80.0" spacing="24.0">
                     <children>
-                        <Label styleClass="header-title" text="Panel de Control" />
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label fx:id="lblHeaderTitle" styleClass="header-title" text="Panel de Control" />
+                                <Label text="Gestiona tu negocio desde aquí"
+                                       style="-fx-font-size: 14px; -fx-text-fill: #6B7280;" />
+                            </children>
+                        </VBox>
+
+                        <!-- Spacer -->
                         <Region HBox.hgrow="ALWAYS" />
+
+                        <!-- Header Actions (Optional) -->
+                        <HBox spacing="12.0" alignment="CENTER_RIGHT">
+                            <children>
+                                <Label fx:id="lblFechaHora" text="Sábado, 14 Junio 2025"
+                                       style="-fx-font-size: 13px; -fx-text-fill: #6B7280;" />
+                            </children>
+                        </HBox>
                     </children>
                 </HBox>
-                <BorderPane fx:id="mainContentArea" VBox.vgrow="ALWAYS" />
+
+                <!-- Dynamic Content Area -->
+                <BorderPane fx:id="mainContentArea" VBox.vgrow="ALWAYS"
+                            style="-fx-background-color: transparent;" />
             </children>
         </VBox>
     </center>
