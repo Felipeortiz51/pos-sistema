@@ -5,36 +5,152 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="350.0" spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 40;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuempresa.pos.controller.LoginController">
-    <children>
-        <Label text="Iniciar Sesión" textFill="#212529">
-            <font>
-                <Font name="System Bold" size="28.0" />
-            </font>
-        </Label>
-        <VBox spacing="8.0">
-            <children>
-                <Label text="Nombre de Usuario" textFill="#495057">
-                    <font>
-                        <Font name="System Semibold" size="14.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="txtUsername" promptText="admin" styleClass="text-field" stylesheets="@../css/dashboard-styles.css" />
-            </children>
-        </VBox>
-        <VBox spacing="8.0">
-            <children>
-                <Label text="Contraseña" textFill="#495057">
-                    <font>
-                        <Font name="System Semibold" size="14.0" />
-                    </font>
-                </Label>
-                <PasswordField fx:id="txtPassword" promptText="••••••••" styleClass="text-field" stylesheets="@../css/dashboard-styles.css" />
-            </children>
-        </VBox>
-        <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#handleLogin" prefHeight="45.0" prefWidth="270.0" styleClass="button-primary" stylesheets="@../css/dashboard-styles.css" text="Acceder" />
-    </children>
-</VBox>
+<HBox fx:id="mainContainer" prefHeight="600.0" prefWidth="1000.0"
+      style="-fx-font-family: 'Segoe UI', 'Roboto', sans-serif;"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.tuempresa.pos.controller.LoginController">
+
+    <!-- Panel izquierdo - Branding -->
+    <VBox fx:id="brandingPanel" prefWidth="500.0" alignment="CENTER" spacing="40.0"
+          style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);">
+        <padding>
+            <Insets top="60.0" bottom="60.0" left="60.0" right="60.0"/>
+        </padding>
+        <children>
+            <!-- Logo y título -->
+            <VBox alignment="CENTER" spacing="20.0">
+                <children>
+                    <Label text="🏪" style="-fx-font-size: 64px;"/>
+                    <Label text="TiendaControl"
+                           style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                    <Label text="Sistema de Punto de Venta"
+                           style="-fx-font-size: 18px; -fx-text-fill: rgba(255, 255, 255, 0.9);" />
+                </children>
+            </VBox>
+
+            <!-- Características con animación -->
+            <VBox spacing="16.0" alignment="CENTER_LEFT">
+                <children>
+                    <HBox spacing="12.0" alignment="CENTER_LEFT">
+                        <children>
+                            <Label fx:id="feature1Icon" text="✓"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.8); -fx-font-weight: bold;" />
+                            <Label fx:id="feature1Text" text="Gestión completa de inventario"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.9);" />
+                        </children>
+                    </HBox>
+                    <HBox spacing="12.0" alignment="CENTER_LEFT">
+                        <children>
+                            <Label fx:id="feature2Icon" text="✓"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.8); -fx-font-weight: bold;" />
+                            <Label fx:id="feature2Text" text="Ventas rápidas con código de barras"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.9);" />
+                        </children>
+                    </HBox>
+                    <HBox spacing="12.0" alignment="CENTER_LEFT">
+                        <children>
+                            <Label fx:id="feature3Icon" text="✓"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.8); -fx-font-weight: bold;" />
+                            <Label fx:id="feature3Text" text="Reportes detallados y alertas"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.9);" />
+                        </children>
+                    </HBox>
+                    <HBox spacing="12.0" alignment="CENTER_LEFT">
+                        <children>
+                            <Label fx:id="feature4Icon" text="✓"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.8); -fx-font-weight: bold;" />
+                            <Label fx:id="feature4Text" text="Interfaz moderna y fácil de usar"
+                                   style="-fx-font-size: 16px; -fx-text-fill: rgba(255, 255, 255, 0.9);" />
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+        </children>
+    </VBox>
+
+    <!-- Panel derecho - Formulario -->
+    <VBox HBox.hgrow="ALWAYS" alignment="CENTER"
+          style="-fx-background-color: #ffffff;">
+        <padding>
+            <Insets top="60.0" bottom="60.0" left="60.0" right="60.0"/>
+        </padding>
+        <children>
+            <VBox fx:id="loginFormContainer" maxWidth="400.0" spacing="32.0"
+                  style="-fx-padding: 40; -fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 5);">
+                <children>
+                    <!-- Header -->
+                    <VBox alignment="CENTER" spacing="8.0">
+                        <children>
+                            <Label fx:id="titleLabel" text="Iniciar Sesión"
+                                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #1a202c;" />
+                            <Label fx:id="subtitleLabel" text="Ingresa tus credenciales para acceder al sistema"
+                                   style="-fx-font-size: 16px; -fx-text-fill: #718096; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                        </children>
+                    </VBox>
+
+                    <!-- Formulario -->
+                    <VBox spacing="20.0">
+                        <children>
+                            <!-- Usuario -->
+                            <VBox spacing="8.0">
+                                <children>
+                                    <Label text="Usuario"
+                                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2d3748;" />
+                                    <TextField fx:id="txtUsername" promptText="Ingresa tu usuario"
+                                               style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 14 16; -fx-font-size: 16px; -fx-text-fill: #2d3748; -fx-prompt-text-fill: #a0aec0;" />
+                                </children>
+                            </VBox>
+
+                            <!-- Contraseña -->
+                            <VBox spacing="8.0">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <Label text="Contraseña"
+                                                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2d3748;" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label fx:id="forgotPasswordLabel" text="¿Olvidaste tu contraseña?"
+                                                   style="-fx-font-size: 12px; -fx-text-fill: #667eea; -fx-cursor: hand;" />
+                                        </children>
+                                    </HBox>
+                                    <PasswordField fx:id="txtPassword" promptText="Ingresa tu contraseña"
+                                                   style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-width: 2; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 14 16; -fx-font-size: 16px; -fx-text-fill: #2d3748; -fx-prompt-text-fill: #a0aec0;" />
+                                </children>
+                            </VBox>
+
+                            <!-- Botón -->
+                            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#handleLogin"
+                                    text="Acceder al Sistema" maxWidth="1.7976931348623157E308"
+                                    style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 16 32; -fx-background-radius: 8px; -fx-border-width: 0; -fx-cursor: hand;" />
+
+                            <!-- Info demo -->
+                            <VBox fx:id="demoInfoContainer" spacing="8.0" alignment="CENTER"
+                                  style="-fx-background-color: #f7fafc; -fx-padding: 16; -fx-background-radius: 8px;">
+                                <children>
+                                    <Label text="Credenciales de prueba:"
+                                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #4a5568;" />
+                                    <Label fx:id="demoCredentials" text="Usuario: admin | Contraseña: admin"
+                                           style="-fx-font-size: 12px; -fx-text-fill: #718096; -fx-font-family: monospace;" />
+                                </children>
+                            </VBox>
+                        </children>
+                    </VBox>
+
+                    <!-- Footer -->
+                    <VBox alignment="CENTER" spacing="4.0">
+                        <children>
+                            <Label fx:id="footerText" text="© 2025 TiendaControl"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #a0aec0;" />
+                            <Label fx:id="versionText" text="Versión 1.0.0"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #cbd5e0;" />
+                        </children>
+                    </VBox>
+                </children>
+            </VBox>
+        </children>
+    </VBox>
+</HBox>
