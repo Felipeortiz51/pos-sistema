@@ -446,6 +446,12 @@ public class MainViewController {
 
         double nuevoTotal = calcularTotal();
 
+        // Si el carrito está vacío, mostrar $0.00 inmediatamente
+        if (carrito.isEmpty()) {
+            lblTotal.setText("$0.00");
+            return;
+        }
+
         // Parsear el total actual
         String totalActualStr = lblTotal.getText().replace("$", "").replace(",", "");
         double totalActual = 0;
@@ -483,7 +489,9 @@ public class MainViewController {
 
             pop.setOnFinished(ev -> {
                 Timeline removeGlow = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                    lblTotal.setEffect(null);
+                    if (lblTotal != null) {
+                        lblTotal.setEffect(null);
+                    }
                 }));
                 removeGlow.play();
             });
@@ -493,6 +501,7 @@ public class MainViewController {
 
         contador.play();
     }
+
 
     @FXML
     private void finalizarVenta() {
@@ -536,25 +545,30 @@ public class MainViewController {
         // Animación de procesamiento
         animarProcesandoVenta();
 
+        // Usar Platform.runLater para evitar el conflicto con animaciones
         Timeline procesamiento = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            Venta nuevaVenta = new Venta();
-            nuevaVenta.setDetalles(new ArrayList<>(carrito));
-            nuevaVenta.setTotal(totalVenta);
+            // Ejecutar el procesamiento fuera del contexto de animación
+            javafx.application.Platform.runLater(() -> {
+                Venta nuevaVenta = new Venta();
+                nuevaVenta.setDetalles(new ArrayList<>(carrito));
+                nuevaVenta.setTotal(totalVenta);
 
-            boolean exito = ventaDAO.registrarVenta(nuevaVenta);
-            if (exito) {
-                // Animación de éxito
-                animarVentaExitosa();
-                NotificationUtil.mostrarInformacion("Venta Exitosa", "La venta se ha registrado correctamente.");
+                boolean exito = ventaDAO.registrarVenta(nuevaVenta);
+                if (exito) {
+                    // Animación de éxito
+                    animarVentaExitosa();
+                    NotificationUtil.mostrarInformacion("Venta Exitosa", "La venta se ha registrado correctamente.");
 
-                // Mostrar resumen simple
-                mostrarResumenVentaSimple(nuevaVenta);
+                    // Mostrar resumen simple SIN conflicto
+                    mostrarResumenVentaSimple(nuevaVenta);
 
-                cancelarVenta();
-            } else {
-                animarVentaFallida();
-                NotificationUtil.mostrarError("Error de Venta", "Ocurrió un error y la venta no pudo ser registrada.");
-            }
+                    // Limpiar carrito después de mostrar el resumen
+                    limpiarCarritoCompleto();
+                } else {
+                    animarVentaFallida();
+                    NotificationUtil.mostrarError("Error de Venta", "Ocurrió un error y la venta no pudo ser registrada.");
+                }
+            });
         }));
         procesamiento.play();
     }
@@ -563,20 +577,30 @@ public class MainViewController {
      * Muestra un resumen simple de la venta
      */
     private void mostrarResumenVentaSimple(Venta venta) {
-        Alert resumen = new Alert(Alert.AlertType.INFORMATION);
-        resumen.setTitle("Venta Completada");
-        resumen.setHeaderText("Resumen de la Transacción");
+        // Usar Platform.runLater para asegurar que no estamos en una animación
+        javafx.application.Platform.runLater(() -> {
+            Alert resumen = new Alert(Alert.AlertType.INFORMATION);
+            resumen.setTitle("Venta Completada");
+            resumen.setHeaderText("Resumen de la Transacción");
 
-        StringBuilder contenido = new StringBuilder();
-        contenido.append("Venta ID: ").append(venta.getId()).append("\n");
-        contenido.append("Fecha: ").append(venta.getFechaVenta().format(
-                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))).append("\n");
-        contenido.append("Total: $").append(String.format("%.2f", venta.getTotal())).append("\n");
-        contenido.append("Método de Pago: Efectivo").append("\n\n");
-        contenido.append("¡Gracias por su compra!");
+            StringBuilder contenido = new StringBuilder();
+            contenido.append("Venta ID: ").append(venta.getId()).append("\n");
+            contenido.append("Fecha: ").append(venta.getFechaVenta().format(
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))).append("\n");
+            contenido.append("Total: $").append(String.format("%.2f", venta.getTotal())).append("\n");
+            contenido.append("Método de Pago: Efectivo").append("\n\n");
+            contenido.append("¡Gracias por su compra!");
 
-        resumen.setContentText(contenido.toString());
-        resumen.showAndWait();
+            resumen.setContentText(contenido.toString());
+
+            // Cuando se cierre el diálogo, limpiar automáticamente
+            resumen.setOnHidden(event -> {
+                // Este evento se ejecuta cuando el usuario cierra el diálogo
+                System.out.println("Diálogo cerrado, limpiando interfaz...");
+            });
+
+            resumen.showAndWait();
+        });
     }
 
     /**
@@ -678,14 +702,18 @@ public class MainViewController {
         if (!carrito.isEmpty()) {
             // Animación de limpieza del carrito
             animarLimpiezaCarrito();
-        }
 
-        Timeline limpiar = new Timeline(new KeyFrame(Duration.millis(500), e -> {
-            carrito.clear();
-            actualizarTotalConAnimacion();
+            Timeline limpiar = new Timeline(new KeyFrame(Duration.millis(500), e -> {
+                limpiarCarritoCompleto();
+            }));
+            limpiar.play();
+        } else {
+            // Si ya está vacío, solo limpiar campos
             limpiarCamposProducto();
-        }));
-        limpiar.play();
+            if (lblTotal != null) {
+                lblTotal.setText("$0.00");
+            }
+        }
     }
 
     /**
@@ -745,6 +773,33 @@ public class MainViewController {
 
     private double calcularTotal() {
         return carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+    }
+    private void limpiarCarritoCompleto() {
+        // Ejecutar después de un pequeño delay para asegurar que todas las animaciones terminaron
+        Timeline limpiarTodo = new Timeline(new KeyFrame(Duration.millis(500), e -> {
+            carrito.clear();
+
+            // Resetear el total a $0.00
+            if (lblTotal != null) {
+                lblTotal.setText("$0.00");
+            }
+
+            limpiarCamposProducto();
+
+            // Quitar cualquier efecto visual que pueda quedar
+            if (lblTotal != null) {
+                lblTotal.setEffect(null);
+                lblTotal.setScaleX(1.0);
+                lblTotal.setScaleY(1.0);
+            }
+
+            if (tablaVenta != null) {
+                tablaVenta.setEffect(null);
+            }
+
+            System.out.println("Carrito limpiado completamente, total: " + calcularTotal());
+        }));
+        limpiarTodo.play();
     }
 
     private void limpiarCamposProducto() {
