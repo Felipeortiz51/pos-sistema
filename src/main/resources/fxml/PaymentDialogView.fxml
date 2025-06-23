@@ -37,7 +37,7 @@
                     <VBox alignment="CENTER_RIGHT" spacing="4.0">
                         <children>
                             <Label text="Total a Pagar:" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
-                            <Label fx:id="lblTotalVenta" text="$0.00"
+                            <Label fx:id="lblTotalVenta" text="\$0.00"
                                    style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #212529;"/>
                         </children>
                     </VBox>
@@ -109,7 +109,7 @@
                                 <children>
                                     <Label text="Pagado:" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
                                     <Region HBox.hgrow="ALWAYS"/>
-                                    <Label fx:id="lblTotalPagado" text="$0.00"
+                                    <Label fx:id="lblTotalPagado" text="\$0.00"
                                            style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #28a745;"/>
                                 </children>
                             </HBox>
@@ -118,7 +118,7 @@
                                 <children>
                                     <Label text="Faltante:" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
                                     <Region HBox.hgrow="ALWAYS"/>
-                                    <Label fx:id="lblFaltante" text="$0.00"
+                                    <Label fx:id="lblFaltante" text="\$0.00"
                                            style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #dc3545;"/>
                                 </children>
                             </HBox>
@@ -127,7 +127,7 @@
                                 <children>
                                     <Label text="Cambio:" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
                                     <Region HBox.hgrow="ALWAYS"/>
-                                    <Label fx:id="lblCambio" text="$0.00"
+                                    <Label fx:id="lblCambio" text="\$0.00"
                                            style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #ffc107;"/>
                                 </children>
                             </HBox>

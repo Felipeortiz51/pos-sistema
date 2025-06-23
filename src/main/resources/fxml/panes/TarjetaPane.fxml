@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.tuempresa.pos.controller.TarjetaPaneController"
+      spacing="12">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Número de Tarjeta:" style="-fx-font-weight: 600; -fx-font-size: 14px;"/>
+    <TextField fx:id="txtNumeroTarjeta" promptText="**** **** **** 1234" styleClass="text-field"/>
+
+    <HBox spacing="12">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="CVV:" style="-fx-font-weight: 600; -fx-font-size: 14px;"/>
+            <TextField fx:id="txtCodigoSeguridad" promptText="123" styleClass="text-field"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="Banco (Opcional):" style="-fx-font-weight: 600; -fx-font-size: 14px;"/>
+            <TextField fx:id="txtBanco" promptText="Nombre del banco emisor" styleClass="text-field"/>
+        </VBox>
+    </HBox>
+
+    <Label text="🔒 La información de la tarjeta es para fines de demostración y no se almacena de forma insegura."
+           style="-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-wrap-text: true;"/>
+</VBox>

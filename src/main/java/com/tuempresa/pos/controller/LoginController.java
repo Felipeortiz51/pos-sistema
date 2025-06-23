@@ -35,7 +35,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         usuarioDAO = new UsuarioDAO();
-
+        btnLogin.setDefaultButton(true);
         // Inicializar animaciones de entrada
         initializeEntryAnimations();
 

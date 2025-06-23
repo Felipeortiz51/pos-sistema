@@ -1,15 +1,16 @@
 package com.tuempresa.pos.dao;
 
 import com.tuempresa.pos.config.DatabaseManager;
+import com.tuempresa.pos.model.DetallePago;
 import com.tuempresa.pos.model.DetalleVenta;
+import com.tuempresa.pos.model.PagoCompleto;
 import com.tuempresa.pos.model.Venta;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ArrayList;
-import java.time.LocalDate;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Data Access Object (DAO) para la entidad Venta.
@@ -192,5 +193,71 @@ public class VentaDAO {
             System.err.println("Error al obtener ventas de los últimos 7 días: " + e.getMessage());
         }
         return ventasPorDia;
+    }
+    public boolean registrarVentaCompleta(Venta venta, PagoCompleto pagoCompleto) {
+        Connection conn = DatabaseManager.getConnection();
+        String sqlVenta = "INSERT INTO ventas (total, fecha_venta) VALUES (?, ?)";
+        String sqlDetalleVenta = "INSERT INTO detalle_ventas (id_venta, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)";
+
+        try {
+            conn.setAutoCommit(false); // INICIAR TRANSACCIÓN
+
+            // 1. Insertar la Venta y obtener su ID
+            int ventaId;
+            try (PreparedStatement pstmtVenta = conn.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
+                pstmtVenta.setDouble(1, venta.getTotal());
+                pstmtVenta.setString(2, venta.getFechaVenta().toString());
+                pstmtVenta.executeUpdate();
+                try (ResultSet rs = pstmtVenta.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        ventaId = rs.getInt(1);
+                        venta.setId(ventaId);
+                    } else {
+                        throw new SQLException("No se pudo obtener el ID de la venta creada.");
+                    }
+                }
+            }
+
+            // 2. Insertar los Detalles de la Venta y actualizar Stock
+            ProductoDAO productoDAO = new ProductoDAO();
+            try (PreparedStatement pstmtDetalle = conn.prepareStatement(sqlDetalleVenta)) {
+                for (DetalleVenta detalle : venta.getDetalles()) {
+                    pstmtDetalle.setInt(1, ventaId);
+                    pstmtDetalle.setInt(2, detalle.getProducto().getId());
+                    pstmtDetalle.setInt(3, detalle.getCantidad());
+                    pstmtDetalle.setDouble(4, detalle.getPrecioUnitario());
+                    pstmtDetalle.addBatch();
+                    productoDAO.actualizarStock(conn, detalle.getProducto().getId(), detalle.getCantidad());
+                }
+                pstmtDetalle.executeBatch();
+            }
+
+            // 3. Insertar los Detalles de Pago
+            PagoDAO pagoDAO = new PagoDAO();
+            for (DetallePago detallePago : pagoCompleto.getDetallesPago()) {
+                detallePago.setIdVenta(ventaId);
+                if (!pagoDAO.registrarPagoConConexion(detallePago, conn)) {
+                    throw new SQLException("Fallo al registrar un detalle de pago.");
+                }
+            }
+
+            conn.commit(); // CONFIRMAR TRANSACCIÓN
+            return true;
+
+        } catch (SQLException e) {
+            System.err.println("Error en transacción de venta. Realizando rollback: " + e.getMessage());
+            try {
+                if (conn != null) conn.rollback(); // REVERTIR TRANSACCIÓN
+            } catch (SQLException ex) {
+                System.err.println("Error crítico al intentar hacer rollback: " + ex.getMessage());
+            }
+            return false;
+        } finally {
+            try {
+                if (conn != null) conn.setAutoCommit(true); // RESTAURAR MODO AUTO-COMMIT
+            } catch (SQLException e) {
+                System.err.println("Error al restaurar auto-commit: " + e.getMessage());
+            }
+        }
     }
 }

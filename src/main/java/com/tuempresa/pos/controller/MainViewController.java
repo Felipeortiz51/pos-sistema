@@ -3,6 +3,7 @@ package com.tuempresa.pos.controller;
 import com.tuempresa.pos.dao.ProductoDAO;
 import com.tuempresa.pos.dao.VentaDAO;
 import com.tuempresa.pos.model.DetalleVenta;
+import com.tuempresa.pos.model.PagoCompleto; // <-- IMPORTANTE
 import com.tuempresa.pos.model.Producto;
 import com.tuempresa.pos.model.Venta;
 import com.tuempresa.pos.util.NotificationUtil;
@@ -11,19 +12,25 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader; // <-- IMPORTANTE
+import javafx.scene.Parent; // <-- IMPORTANTE
+import javafx.scene.Scene; // <-- IMPORTANTE
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality; // <-- IMPORTANTE
+import javafx.stage.Stage; // <-- IMPORTANTE
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.IOException; // <-- IMPORTANTE
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.function.Consumer; // <-- IMPORTANTE
 import java.util.stream.Collectors;
 
 public class MainViewController {
@@ -233,56 +240,30 @@ public class MainViewController {
     }
 
     private void configurarTabla() {
-        if (colProducto != null) {
-            colProducto.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getProducto().getNombre()));
-        }
-        if (colCantidad != null) {
-            colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        }
-        if (colPrecioUnitario != null) {
-            colPrecioUnitario.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
-        }
-        if (colSubtotal != null) {
-            colSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
-        }
-
+        colProducto.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProducto().getNombre()));
+        colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colPrecioUnitario.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
+        colSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
         agregarBotonEliminar();
     }
 
     @FXML
     private void buscarProductoPorCodigo() {
-        if (txtCodigoBarras == null) return;
-
         String codigo = txtCodigoBarras.getText().trim();
         if (codigo.isEmpty()) {
             return;
         }
-
-        // Animación de búsqueda
         animarBusqueda(txtCodigoBarras);
-
         productoSeleccionado = productoDAO.buscarPorCodigo(codigo);
         if (productoSeleccionado != null) {
-            if (txtNombreProducto != null) {
-                txtNombreProducto.setText(productoSeleccionado.getNombre());
-            }
-            if (spinnerCantidad != null) {
-                spinnerCantidad.getValueFactory().setValue(1);
-            }
-
-            // Animación de éxito
+            txtNombreProducto.setText(productoSeleccionado.getNombre());
+            spinnerCantidad.getValueFactory().setValue(1);
             animarBusquedaExitosa();
-
             agregarAlCarrito();
         } else {
-            // Animación de error
             animarBusquedaFallida();
-
             NotificationUtil.mostrarAdvertencia("No encontrado", "Producto con código " + codigo + " no encontrado.");
-            if (txtNombreProducto != null) {
-                txtNombreProducto.clear();
-            }
+            txtNombreProducto.clear();
         }
     }
 
@@ -363,7 +344,7 @@ public class MainViewController {
             return;
         }
 
-        int cantidad = spinnerCantidad != null ? spinnerCantidad.getValue() : 1;
+        int cantidad = spinnerCantidad.getValue();
         if (cantidad > productoSeleccionado.getStock()) {
             animarErrorStock();
             NotificationUtil.mostrarError("Error de Stock", "No hay suficiente stock. Disponible: " + productoSeleccionado.getStock());
@@ -376,8 +357,6 @@ public class MainViewController {
         detalle.setPrecioUnitario(productoSeleccionado.getPrecio());
 
         carrito.add(detalle);
-
-        // Animaciones de éxito
         animarProductoAgregado();
         actualizarTotalConAnimacion();
         limpiarCamposProducto();
@@ -513,8 +492,51 @@ public class MainViewController {
 
         double totalVenta = calcularTotal();
 
-        // VERSIÓN SIMPLIFICADA: Solo efectivo por ahora
-        mostrarDialogoEfectivoSimple(totalVenta);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PaymentDialogView.fxml"));
+            Parent root = loader.load();
+
+            PaymentDialogController controller = loader.getController();
+
+            Consumer<PagoCompleto> onPagoCompletado = pago -> {
+                procesarVentaCompleta(pago);
+            };
+
+            controller.inicializar(totalVenta, onPagoCompletado, this::cancelarVenta);
+
+            Stage stage = new Stage();
+            stage.setTitle("Procesar Pago");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+
+            // --- LÍNEAS AÑADIDAS PARA SOLUCIONAR EL PROBLEMA ---
+            stage.setMinWidth(800);  // Establece el ancho mínimo
+            stage.setMinHeight(800); // Establece el alto mínimo
+            // --- FIN DE LÍNEAS AÑADIDAS ---
+
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            NotificationUtil.mostrarError("Error de Sistema", "No se pudo abrir el diálogo de pago.");
+        }
+    }
+    private void procesarVentaCompleta(PagoCompleto pago) {
+        Venta nuevaVenta = new Venta();
+        nuevaVenta.setDetalles(new ArrayList<>(carrito));
+        nuevaVenta.setTotal(pago.getTotalVenta());
+
+        boolean exito = ventaDAO.registrarVentaCompleta(nuevaVenta, pago);
+
+        if (exito) {
+            animarVentaExitosa();
+            NotificationUtil.mostrarInformacion("Venta Exitosa", "La venta y los pagos se han registrado correctamente.");
+            mostrarResumenVentaSimple(nuevaVenta); // Opcional: Mostrar resumen
+            limpiarCarritoCompleto();
+        } else {
+            animarVentaFallida();
+            NotificationUtil.mostrarError("Error de Base de Datos", "La transacción fue revertida. La venta no se guardó.");
+        }
     }
 
     /**
@@ -577,30 +599,14 @@ public class MainViewController {
      * Muestra un resumen simple de la venta
      */
     private void mostrarResumenVentaSimple(Venta venta) {
-        // Usar Platform.runLater para asegurar que no estamos en una animación
-        javafx.application.Platform.runLater(() -> {
-            Alert resumen = new Alert(Alert.AlertType.INFORMATION);
-            resumen.setTitle("Venta Completada");
-            resumen.setHeaderText("Resumen de la Transacción");
-
-            StringBuilder contenido = new StringBuilder();
-            contenido.append("Venta ID: ").append(venta.getId()).append("\n");
-            contenido.append("Fecha: ").append(venta.getFechaVenta().format(
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))).append("\n");
-            contenido.append("Total: $").append(String.format("%.2f", venta.getTotal())).append("\n");
-            contenido.append("Método de Pago: Efectivo").append("\n\n");
-            contenido.append("¡Gracias por su compra!");
-
-            resumen.setContentText(contenido.toString());
-
-            // Cuando se cierre el diálogo, limpiar automáticamente
-            resumen.setOnHidden(event -> {
-                // Este evento se ejecuta cuando el usuario cierra el diálogo
-                System.out.println("Diálogo cerrado, limpiando interfaz...");
-            });
-
-            resumen.showAndWait();
-        });
+        Alert resumen = new Alert(Alert.AlertType.INFORMATION);
+        resumen.setTitle("Venta Completada");
+        resumen.setHeaderText("Resumen de la Transacción");
+        String contenido = "Venta ID: " + venta.getId() + "\n" +
+                "Fecha: " + venta.getFechaVenta().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n" +
+                "Total: $" + String.format("%.2f", venta.getTotal());
+        resumen.setContentText(contenido);
+        resumen.showAndWait();
     }
 
     /**
@@ -700,19 +706,12 @@ public class MainViewController {
     @FXML
     private void cancelarVenta() {
         if (!carrito.isEmpty()) {
-            // Animación de limpieza del carrito
             animarLimpiezaCarrito();
-
-            Timeline limpiar = new Timeline(new KeyFrame(Duration.millis(500), e -> {
-                limpiarCarritoCompleto();
-            }));
+            Timeline limpiar = new Timeline(new KeyFrame(Duration.millis(500), e -> limpiarCarritoCompleto()));
             limpiar.play();
         } else {
-            // Si ya está vacío, solo limpiar campos
             limpiarCamposProducto();
-            if (lblTotal != null) {
-                lblTotal.setText("$0.00");
-            }
+            lblTotal.setText("$0.00");
         }
     }
 
@@ -737,16 +736,14 @@ public class MainViewController {
     }
 
     private void agregarBotonEliminar() {
-        if (colAcciones == null) return;
-
         Callback<TableColumn<DetalleVenta, Void>, TableCell<DetalleVenta, Void>> cellFactory = param -> new TableCell<>() {
             private final Button btn = new Button("🗑️");
             {
                 btn.setStyle("-fx-background-color: #e76f51; -fx-text-fill: white; -fx-background-radius: 4px;");
-
                 btn.setOnAction(event -> {
                     DetalleVenta detalle = getTableView().getItems().get(getIndex());
-                    animarEliminacionItem(detalle);
+                    carrito.remove(detalle);
+                    actualizarTotalConAnimacion();
                 });
             }
 
@@ -775,47 +772,16 @@ public class MainViewController {
         return carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
     }
     private void limpiarCarritoCompleto() {
-        // Ejecutar después de un pequeño delay para asegurar que todas las animaciones terminaron
-        Timeline limpiarTodo = new Timeline(new KeyFrame(Duration.millis(500), e -> {
-            carrito.clear();
-
-            // Resetear el total a $0.00
-            if (lblTotal != null) {
-                lblTotal.setText("$0.00");
-            }
-
-            limpiarCamposProducto();
-
-            // Quitar cualquier efecto visual que pueda quedar
-            if (lblTotal != null) {
-                lblTotal.setEffect(null);
-                lblTotal.setScaleX(1.0);
-                lblTotal.setScaleY(1.0);
-            }
-
-            if (tablaVenta != null) {
-                tablaVenta.setEffect(null);
-            }
-
-            System.out.println("Carrito limpiado completamente, total: " + calcularTotal());
-        }));
-        limpiarTodo.play();
+        carrito.clear();
+        lblTotal.setText("$0.00");
+        limpiarCamposProducto();
     }
 
     private void limpiarCamposProducto() {
         productoSeleccionado = null;
-
-        if (txtCodigoBarras != null) {
-            txtCodigoBarras.clear();
-        }
-        if (txtNombreProducto != null) {
-            txtNombreProducto.clear();
-        }
-        if (spinnerCantidad != null) {
-            spinnerCantidad.getValueFactory().setValue(1);
-        }
-        if (txtCodigoBarras != null) {
-            txtCodigoBarras.requestFocus();
-        }
+        txtCodigoBarras.clear();
+        txtNombreProducto.clear();
+        spinnerCantidad.getValueFactory().setValue(1);
+        txtCodigoBarras.requestFocus();
     }
 }

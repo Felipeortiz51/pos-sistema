@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="650.0" prefWidth="800.0" styleClass="dialog-pane" stylesheets="@/css/dashboard-styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuempresa.pos.controller.PaymentDialogController">
+    <children>
+        <HBox alignment="CENTER_LEFT" layoutX="34.0" layoutY="24.0" prefHeight="45.0" prefWidth="732.0" spacing="20.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+            <children>
+                <Label text="Procesar Venta" styleClass="header-title-modern" />
+                <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="TOTAL VENTA:" style="-fx-font-weight: 500; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="lblTotalVenta" text="\$0.00" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #0d6efd;">
+                            <HBox.margin>
+                                <Insets left="10.0" />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+        <HBox layoutX="30.0" layoutY="85.0" prefHeight="480.0" prefWidth="740.0" spacing="25.0" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="85.0">
+            <children>
+                <VBox prefWidth="300.0" spacing="15.0" HBox.hgrow="NEVER">
+                    <children>
+                        <Label text="1. Resumen de Pago" styleClass="chart-title" />
+                        <VBox style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 8;">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                    <children>
+                                        <Label text="Total Pagado:" style="-fx-font-weight: 600;" />
+                                        <Label fx:id="lblTotalPagado" text="\$0.00" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #212529;" />
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                    <children>
+                                        <Label text="Faltante:" style="-fx-font-weight: 600;" />
+                                        <Label fx:id="lblFaltante" text="\$0.00" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #dc3545;" />
+                                    </children>
+                                </HBox>
+                                <HBox fx:id="hboxCambio" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
+                                    <children>
+                                        <Label text="Cambio:" style="-fx-font-weight: 600;" />
+                                        <Label fx:id="lblCambio" text="\$0.00" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #28a745;" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="5.0" />
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        <Label text="Pagos Realizados:" styleClass="chart-title" />
+                        <ListView fx:id="listPagos" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+                <VBox spacing="15.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="2. Seleccionar Método de Pago" styleClass="chart-title" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="btnEfectivo" mnemonicParsing="false" onAction="#seleccionarEfectivo" prefHeight="45.0" prefWidth="150.0" text="💵 Efectivo" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="btnTarjetaCredito" mnemonicParsing="false" onAction="#seleccionarTarjetaCredito" prefHeight="45.0" prefWidth="150.0" text="💳 Tarjeta Crédito" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="btnTarjetaDebito" mnemonicParsing="false" onAction="#seleccionarTarjetaDebito" prefHeight="45.0" prefWidth="150.0" text="💳 Tarjeta Débito" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="btnTransferencia" mnemonicParsing="false" onAction="#seleccionarTransferencia" prefHeight="45.0" prefWidth="150.0" text="🏦 Transferencia" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <Label text="3. Ingresar Detalles del Pago" styleClass="chart-title" />
+                        <HBox alignment="CENTER">
+                            <children>
+                                <Label fx:id="lblTipoSeleccionado" text="Seleccione un método" style="-fx-font-weight: 600; -fx-text-fill: #0d6efd;" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Monto a Pagar:" style="-fx-font-weight: 600;" />
+                            <TextField fx:id="txtMonto" promptText="0.00" HBox.hgrow="ALWAYS" />
+                            <Button mnemonicParsing="false" onAction="#procesarPago" prefHeight="40.0" text="Añadir Pago" styleClass="button-success" />
+                        </HBox>
+                        <VBox fx:id="vboxCamposEspecificos" spacing="10.0" VBox.vgrow="ALWAYS">
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" layoutX="490.0" layoutY="580.0" spacing="15.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="30.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#cancelarVenta" prefHeight="50.0" prefWidth="120.0" text="Cancelar" styleClass="button-danger" />
+                <Button fx:id="btnCompletarVenta" mnemonicParsing="false" onAction="#completarVenta" prefHeight="50.0" prefWidth="200.0" text="Completar Venta" styleClass="button-primary" />
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

@@ -13,15 +13,11 @@ import java.util.List;
  */
 public class PagoDAO {
 
-    /**
-     * Registra un pago en la base de datos
-     */
-    public boolean registrarPago(DetallePago pago) {
+    public boolean registrarPagoConConexion(DetallePago pago, Connection conn) throws SQLException {
         String sql = "INSERT INTO detalle_pagos (id_venta, tipo_pago, monto, referencia, " +
                 "autorizacion, fecha_pago, banco, ultimos_cuatro_digitos) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        Connection conn = DatabaseManager.getConnection();
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, pago.getIdVenta());
             pstmt.setString(2, pago.getTipo().name());
@@ -42,10 +38,22 @@ public class PagoDAO {
                     }
                 }
             }
-        } catch (SQLException e) {
-            System.err.println("Error al registrar pago: " + e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Registra un pago en la base de datos
+     */
+    public boolean registrarPago(DetallePago pago) {
+        Connection conn = null;
+        try {
+            conn = DatabaseManager.getConnection();
+            return registrarPagoConConexion(pago, conn);
+        } catch (SQLException e) {
+            System.err.println("Error al registrar pago: " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -224,6 +232,7 @@ public class PagoDAO {
 
         return pagos;
     }
+
 
     /**
      * Elimina un pago (para cancelaciones)
