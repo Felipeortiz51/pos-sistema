@@ -3,13 +3,12 @@ package com.tuempresa.pos.controller;
 import com.tuempresa.pos.dao.ProductoDAO;
 import com.tuempresa.pos.dao.VentaDAO;
 import com.tuempresa.pos.model.Producto;
+import com.tuempresa.pos.service.SessionManager; // <-- IMPORTANTE AÑADIR ESTA LÍNEA
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -42,27 +41,24 @@ public class AlertasController {
 
     private void cargarAlertas() {
         totalAlertas = 0;
-
-        // Cargar alertas de stock bajo
         cargarAlertasStock();
-
-        // Cargar alertas de ventas
         cargarAlertasVentas();
-
-        // Cargar alertas del sistema
         cargarAlertasSistema();
-
-        // Actualizar resumen
         lblResumenAlertas.setText(totalAlertas + " alertas activas");
     }
 
     private void cargarAlertasStock() {
         vboxAlertasStock.getChildren().clear();
 
-        // Obtener productos con stock bajo (menos de 5 unidades)
-        List<Producto> productosStockBajo = productoDAO.getAllProductos().stream()
+        // --- INICIO DEL CAMBIO ---
+        // 1. Obtenemos el ID del local activo desde la sesión.
+        int idLocal = SessionManager.getInstance().getLocalId();
+
+        // 2. Llamamos al método getAllProductos con el idLocal.
+        List<Producto> productosStockBajo = productoDAO.getAllProductos(idLocal).stream()
                 .filter(p -> p.getStock() > 0 && p.getStock() <= 5)
                 .toList();
+        // --- FIN DEL CAMBIO ---
 
         int countStock = productosStockBajo.size();
         lblCountStockBajo.setText(countStock + " productos");
@@ -72,14 +68,14 @@ public class AlertasController {
             HBox alertaItem = crearAlertaItem(
                     "● " + producto.getNombre(),
                     "Stock actual: " + producto.getStock() + " unidades",
-                    "hace " + calcularTiempoTranscurrido(),
+                    "hace 2 horas", // Simulación
                     "#dc3545"
             );
             vboxAlertasStock.getChildren().add(alertaItem);
         }
 
         if (productosStockBajo.isEmpty()) {
-            Label sinAlertas = new Label("No hay productos con stock bajo");
+            Label sinAlertas = new Label("No hay productos con stock bajo en este local.");
             sinAlertas.setStyle("-fx-text-fill: #6c757d; -fx-font-style: italic;");
             vboxAlertasStock.getChildren().add(sinAlertas);
         }
@@ -87,9 +83,9 @@ public class AlertasController {
 
     private void cargarAlertasVentas() {
         vboxAlertasVentas.getChildren().clear();
-
+        // Nota: En el futuro, este método también debería filtrar por local.
         double ventasHoy = ventaDAO.sumarVentasHoy();
-        double metaDiaria = 5000.0; // Meta diaria ejemplo
+        double metaDiaria = 5000.0;
 
         if (ventasHoy >= metaDiaria) {
             lblCountVentas.setText("Meta alcanzada");
@@ -116,10 +112,7 @@ public class AlertasController {
 
     private void cargarAlertasSistema() {
         vboxAlertasSistema.getChildren().clear();
-
-        // Por ahora, mostrar que todo está bien
         lblCountSistema.setText("Todo en orden");
-
         HBox alertaItem = crearAlertaItem(
                 "✓ Sistema funcionando correctamente",
                 "Última verificación: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
@@ -135,11 +128,9 @@ public class AlertasController {
         container.setPadding(new Insets(12));
         container.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 8px;");
 
-        // Indicador de color
         Circle indicator = new Circle(4);
         indicator.setFill(Color.web(color));
 
-        // Contenido
         VBox content = new VBox(4);
         HBox.setHgrow(content, Priority.ALWAYS);
 
@@ -151,17 +142,11 @@ public class AlertasController {
 
         content.getChildren().addAll(lblTitulo, lblDescripcion);
 
-        // Tiempo
         Label lblTiempo = new Label(tiempo);
         lblTiempo.setStyle("-fx-font-size: 12px; -fx-text-fill: #6c757d;");
 
         container.getChildren().addAll(indicator, content, lblTiempo);
 
         return container;
-    }
-
-    private String calcularTiempoTranscurrido() {
-        // Simulación simple - en producción calcularías el tiempo real
-        return "2 horas";
     }
 }

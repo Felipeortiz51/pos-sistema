@@ -2,6 +2,7 @@ package com.tuempresa.pos.controller;
 
 import com.tuempresa.pos.dao.ProductoDAO;
 import com.tuempresa.pos.dao.VentaDAO;
+import com.tuempresa.pos.service.SessionManager;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -205,10 +206,17 @@ public class DashboardContentController {
     }
 
     private void cargarDatosDashboard() {
-        int productos = productoDAO.contarProductosActivos();
+        // --- INICIO DE CAMBIOS ---
+        // Obtenemos el ID del local activo
+        int idLocal = SessionManager.getInstance().getLocalId();
+
+        // Llamamos a los métodos del DAO con el ID del local
+        int productos = productoDAO.contarProductosActivos(idLocal);
+        int alertas = productoDAO.contarAlertasStock(5, idLocal);
+        // Nota: Los métodos de VentaDAO también necesitarán ser actualizados en el futuro
         double ventasHoy = ventaDAO.sumarVentasHoy();
-        int alertas = productoDAO.contarAlertasStock(5);
         double ventasAyer = ventaDAO.sumarVentasAyer();
+        // --- FIN DE CAMBIOS ---
 
         // Animar contadores con efecto de contar desde 0
         animarContador(lblProductosActivos, 0, productos, "");

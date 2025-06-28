@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseManager {
-    private static final String DB_URL = "jdbc:sqlite:pos_database.db";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/pos_sistema_db";
+    private static final String USER = "pos_user";
+    private static final String PASSWORD = "d1e2f3t4"; // Usa la misma que creaste en el Paso 1
     private static Connection connection;
 
     private DatabaseManager() {}
@@ -17,9 +19,9 @@ public class DatabaseManager {
     public static Connection getConnection() {
         if (connection == null) {
             try {
-                connection = DriverManager.getConnection(DB_URL);
-                System.out.println("Conexión a SQLite establecida.");
-                inicializarBaseDeDatos();
+                connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+                System.out.println("Conexión a PostgreSQL establecida.");
+
             } catch (SQLException e) {
                 System.err.println("Error al conectar a la base de datos: " + e.getMessage());
                 throw new RuntimeException(e);

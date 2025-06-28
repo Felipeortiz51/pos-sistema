@@ -9,7 +9,7 @@ public class Venta {
     private LocalDateTime fechaVenta;
     private double total;
     private List<DetalleVenta> detalles;
-
+    private int idLocal;
     public Venta() {
         this.detalles = new ArrayList<>();
         this.fechaVenta = LocalDateTime.now();
@@ -24,4 +24,7 @@ public class Venta {
     public void setTotal(double total) { this.total = total; }
     public List<DetalleVenta> getDetalles() { return detalles; }
     public void setDetalles(List<DetalleVenta> detalles) { this.detalles = detalles; }
+    // --- GETTER Y SETTER AÑADIDOS ---
+    public int getIdLocal() { return idLocal; }
+    public void setIdLocal(int idLocal) { this.idLocal = idLocal; }
 }

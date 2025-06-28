@@ -6,6 +6,7 @@ import com.tuempresa.pos.model.DetalleVenta;
 import com.tuempresa.pos.model.PagoCompleto; // <-- IMPORTANTE
 import com.tuempresa.pos.model.Producto;
 import com.tuempresa.pos.model.Venta;
+import com.tuempresa.pos.service.SessionManager;
 import com.tuempresa.pos.util.NotificationUtil;
 import javafx.animation.*;
 import javafx.beans.property.SimpleStringProperty;
@@ -57,7 +58,11 @@ public class MainViewController {
         productoDAO = new ProductoDAO();
         ventaDAO = new VentaDAO();
         carrito = FXCollections.observableArrayList();
-        listaProductosCompleta = FXCollections.observableArrayList(productoDAO.getAllProductos());
+        // --- CAMBIO 1: Cargar productos del local activo ---
+        // Obtenemos el ID del local de la sesión
+        int idLocal = SessionManager.getInstance().getLocalId();
+        // Llamamos al método actualizado del DAO pasándole el ID del local
+        listaProductosCompleta = FXCollections.observableArrayList(productoDAO.getAllProductos(idLocal));
 
         configurarTabla();
         tablaVenta.setItems(carrito);
@@ -254,7 +259,10 @@ public class MainViewController {
             return;
         }
         animarBusqueda(txtCodigoBarras);
-        productoSeleccionado = productoDAO.buscarPorCodigo(codigo);
+        // --- CAMBIO 2: Buscar producto por código en el local activo ---
+        int idLocal = SessionManager.getInstance().getLocalId();
+        productoSeleccionado = productoDAO.buscarPorCodigo(codigo, idLocal);
+
         if (productoSeleccionado != null) {
             txtNombreProducto.setText(productoSeleccionado.getNombre());
             spinnerCantidad.getValueFactory().setValue(1);
@@ -525,7 +533,10 @@ public class MainViewController {
         Venta nuevaVenta = new Venta();
         nuevaVenta.setDetalles(new ArrayList<>(carrito));
         nuevaVenta.setTotal(pago.getTotalVenta());
-
+        // --- CAMBIO 3: Asignar el ID del local y del usuario a la venta ---
+        nuevaVenta.setIdLocal(SessionManager.getInstance().getLocalId());
+        // En el futuro, también el ID de usuario:
+        // nuevaVenta.setIdUsuario(SessionManager.getInstance().getUsuarioActual().getId());
         boolean exito = ventaDAO.registrarVentaCompleta(nuevaVenta, pago);
 
         if (exito) {
